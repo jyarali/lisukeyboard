@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>lisu keyboard.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>lisuKeyboard.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -13,6 +18,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>FC471C621E0A4EDE00D80209</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FC471C7B1E0B08A500D80209</key>
 		<dict>
 			<key>primary</key>
 			<true/>

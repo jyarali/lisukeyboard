@@ -12,7 +12,33 @@
 		FC471C6C1E0A4EDE00D80209 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC471C6A1E0A4EDE00D80209 /* Main.storyboard */; };
 		FC471C6E1E0A4EDE00D80209 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC471C6D1E0A4EDE00D80209 /* Assets.xcassets */; };
 		FC471C711E0A4EDE00D80209 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC471C6F1E0A4EDE00D80209 /* LaunchScreen.storyboard */; };
+		FC471C7F1E0B08A500D80209 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471C7E1E0B08A500D80209 /* KeyboardViewController.swift */; };
+		FC471C831E0B08A500D80209 /* lisu keyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FC471C7C1E0B08A500D80209 /* lisu keyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FC471C811E0B08A500D80209 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FC471C5B1E0A4EDE00D80209 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FC471C7B1E0B08A500D80209;
+			remoteInfo = "lisu keyboard";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FC471C871E0B08A500D80209 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				FC471C831E0B08A500D80209 /* lisu keyboard.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		FC471C631E0A4EDE00D80209 /* lisuKeyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lisuKeyboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -22,10 +48,20 @@
 		FC471C6D1E0A4EDE00D80209 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FC471C701E0A4EDE00D80209 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FC471C721E0A4EDE00D80209 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FC471C7C1E0B08A500D80209 /* lisu keyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "lisu keyboard.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC471C7E1E0B08A500D80209 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
+		FC471C801E0B08A500D80209 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		FC471C601E0A4EDE00D80209 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC471C791E0B08A500D80209 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -39,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				FC471C651E0A4EDE00D80209 /* lisuKeyboard */,
+				FC471C7D1E0B08A500D80209 /* lisu keyboard */,
 				FC471C641E0A4EDE00D80209 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -47,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				FC471C631E0A4EDE00D80209 /* lisuKeyboard.app */,
+				FC471C7C1E0B08A500D80209 /* lisu keyboard.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -64,6 +102,15 @@
 			path = lisuKeyboard;
 			sourceTree = "<group>";
 		};
+		FC471C7D1E0B08A500D80209 /* lisu keyboard */ = {
+			isa = PBXGroup;
+			children = (
+				FC471C7E1E0B08A500D80209 /* KeyboardViewController.swift */,
+				FC471C801E0B08A500D80209 /* Info.plist */,
+			);
+			path = "lisu keyboard";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -74,15 +121,34 @@
 				FC471C5F1E0A4EDE00D80209 /* Sources */,
 				FC471C601E0A4EDE00D80209 /* Frameworks */,
 				FC471C611E0A4EDE00D80209 /* Resources */,
+				FC471C871E0B08A500D80209 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				FC471C821E0B08A500D80209 /* PBXTargetDependency */,
 			);
 			name = lisuKeyboard;
 			productName = lisuKeyboard;
 			productReference = FC471C631E0A4EDE00D80209 /* lisuKeyboard.app */;
 			productType = "com.apple.product-type.application";
+		};
+		FC471C7B1E0B08A500D80209 /* lisu keyboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC471C841E0B08A500D80209 /* Build configuration list for PBXNativeTarget "lisu keyboard" */;
+			buildPhases = (
+				FC471C781E0B08A500D80209 /* Sources */,
+				FC471C791E0B08A500D80209 /* Frameworks */,
+				FC471C7A1E0B08A500D80209 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "lisu keyboard";
+			productName = "lisu keyboard";
+			productReference = FC471C7C1E0B08A500D80209 /* lisu keyboard.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -95,6 +161,11 @@
 				ORGANIZATIONNAME = "Amos Gwa";
 				TargetAttributes = {
 					FC471C621E0A4EDE00D80209 = {
+						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = 2T23QSAHDC;
+						ProvisioningStyle = Automatic;
+					};
+					FC471C7B1E0B08A500D80209 = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = 2T23QSAHDC;
 						ProvisioningStyle = Automatic;
@@ -115,6 +186,7 @@
 			projectRoot = "";
 			targets = (
 				FC471C621E0A4EDE00D80209 /* lisuKeyboard */,
+				FC471C7B1E0B08A500D80209 /* lisu keyboard */,
 			);
 		};
 /* End PBXProject section */
@@ -130,6 +202,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FC471C7A1E0B08A500D80209 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -142,7 +221,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FC471C781E0B08A500D80209 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FC471C7F1E0B08A500D80209 /* KeyboardViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FC471C821E0B08A500D80209 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FC471C7B1E0B08A500D80209 /* lisu keyboard */;
+			targetProxy = FC471C811E0B08A500D80209 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		FC471C6A1E0A4EDE00D80209 /* Main.storyboard */ = {
@@ -260,6 +355,7 @@
 		FC471C761E0A4EDE00D80209 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 2T23QSAHDC;
 				INFOPLIST_FILE = lisuKeyboard/Info.plist;
@@ -273,12 +369,39 @@
 		FC471C771E0A4EDE00D80209 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 2T23QSAHDC;
 				INFOPLIST_FILE = lisuKeyboard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.amosgwa.lisuKeyboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		FC471C851E0B08A500D80209 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 2T23QSAHDC;
+				INFOPLIST_FILE = "lisu keyboard/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.amosgwa.lisuKeyboard.lisu-keyboard";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		FC471C861E0B08A500D80209 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 2T23QSAHDC;
+				INFOPLIST_FILE = "lisu keyboard/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.amosgwa.lisuKeyboard.lisu-keyboard";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -300,6 +423,14 @@
 			buildConfigurations = (
 				FC471C761E0A4EDE00D80209 /* Debug */,
 				FC471C771E0A4EDE00D80209 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		FC471C841E0B08A500D80209 /* Build configuration list for PBXNativeTarget "lisu keyboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC471C851E0B08A500D80209 /* Debug */,
+				FC471C861E0B08A500D80209 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
