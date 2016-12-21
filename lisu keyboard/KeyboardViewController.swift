@@ -9,7 +9,7 @@
 import UIKit
 
 class KeyboardViewController: UIInputViewController {
-
+    
     @IBOutlet var nextKeyboardButton: UIButton!
     
     override func updateViewConstraints() {
@@ -23,9 +23,16 @@ class KeyboardViewController: UIInputViewController {
         
         // Perform custom UI setup here
         self.nextKeyboardButton = UIButton(type: .system)
+        //self.nextKeyboardButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 30)
+        //self.nextKeyboardButton.setTitle(String.fontAwesomeIcon(name: .keyboard), for: [])
         
+        //self.nextKeyboardButton.setImage(UIImage(named:"keyboard.png"), for: [])
         self.nextKeyboardButton.setTitle(NSLocalizedString("Change Keyboard", comment: "Title for 'Next Keyboard' button"), for: [])
         self.nextKeyboardButton.sizeToFit()
+        
+        self.nextKeyboardButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        self.nextKeyboardButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
         self.nextKeyboardButton.translatesAutoresizingMaskIntoConstraints = false
         
         self.nextKeyboardButton.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
@@ -50,6 +57,8 @@ class KeyboardViewController: UIInputViewController {
         for key in keys {
             self.view.addSubview(key)
         }
+        
+        self.addBackspace()
         
         // Add letter key constraints
         
@@ -77,7 +86,7 @@ class KeyboardViewController: UIInputViewController {
             } else if i < topRowNumButtons + midRowNumButtons {
                 // Mid Row
                 
-                // Align top of all buttons in row with bottom of top row's first button 
+                // Align top of all buttons in row with bottom of top row's first button
                 button.topAnchor.constraint(equalTo: keys[0].bottomAnchor).isActive = true
                 
                 if i == topRowNumButtons {
@@ -104,8 +113,30 @@ class KeyboardViewController: UIInputViewController {
         }
     }
     
-    func makeButton(character: String) -> UIView {
+    func addBackspace() {
+        // Backspace key
+        
+        // Make backspace key
+        let backspaceKey = makeButton(character: "<X")
+        
+        // Set tag so we can identify backspace key when processing touches
+        // 10 is arbitrary. However, UIView has a default tag 0.
+        
+        backspaceKey.tag = 10
+        
+        // Add backspace key to self.view
+        self.view.addSubview(backspaceKey)
+        
+        // Set constraints for lower right corner position
+        // Align right side of backspace key with right side of self.view
+        backspaceKey.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        
+        // Align bottom of backspace key with bottomof self.view
+        backspaceKey.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+    }
     
+    func makeButton(character: String) -> UIView {
+        
         // Create the button
         let button = UIView()
         button.backgroundColor = UIColor.init(white: 1, alpha: 1)
@@ -115,25 +146,25 @@ class KeyboardViewController: UIInputViewController {
         let buttonLabel = UILabel()
         buttonLabel.translatesAutoresizingMaskIntoConstraints = false
         buttonLabel.text = character
-
+        
         // Add button label to button
         button.addSubview(buttonLabel)
-
+        
         // Add button to self.view
         self.view.addSubview(button)
-
+        
         // Center button label within button
         buttonLabel.centerXAnchor.constraint(equalTo: button.centerXAnchor).isActive = true
         buttonLabel.centerYAnchor.constraint(equalTo: button.centerYAnchor).isActive = true
-
+        
         // Center button with self.view
         //button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         //button.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-
+        
         // Set button's width and height
         button.widthAnchor.constraint(equalToConstant: 30).isActive = true
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    
+        
         return button
     }
     
@@ -147,6 +178,12 @@ class KeyboardViewController: UIInputViewController {
         let touchPoint = touch?.location(in: self.view)
         // Get the view (key) the touch is in
         let touchView = self.view.hitTest(touchPoint!, with: nil)
+        // if key is backspace
+        if touchView?.tag == 10 {
+            // backspace one character and early return
+            self.textDocumentProxy.deleteBackward()
+            return
+        }
         // Get the key's label
         let touchViewLabel = touchView?.subviews[0]
         // Downcast the label from UIView to UILabel so we can access the "text" property
@@ -176,5 +213,5 @@ class KeyboardViewController: UIInputViewController {
         }
         self.nextKeyboardButton.setTitleColor(textColor, for: [])
     }
-
+    
 }
