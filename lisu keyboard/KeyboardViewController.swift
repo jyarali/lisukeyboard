@@ -11,6 +11,17 @@ import UIKit
 class KeyboardViewController: UIInputViewController {
     
     @IBOutlet var nextKeyboardButton: UIButton!
+    var backspaceButtonTimer: Timer!
+    var alphaCharacters : [String] = []
+    
+    
+    // Constants describing number of keys in each row
+    // Bottom row will take up slack/overflow
+    let topRowNumButtons = 10
+    let midRowNumButtons = 9
+    
+    var viewWidth: CGFloat = 0.0
+    var buttonWidth: CGFloat = 0
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
@@ -21,16 +32,21 @@ class KeyboardViewController: UIInputViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Perform custom UI setup here
-        self.nextKeyboardButton = UIButton(type: .system)
-        //self.nextKeyboardButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 30)
-        //self.nextKeyboardButton.setTitle(String.fontAwesomeIcon(name: .keyboard), for: [])
+        // Calculate the viewWidth
+        viewWidth = UIScreen.main.bounds.width
+        NSLog("viewWidth \(viewWidth)")
+        buttonWidth = viewWidth/CGFloat(topRowNumButtons)
+        NSLog("buttonWidth \(buttonWidth)")
         
-        //self.nextKeyboardButton.setImage(UIImage(named:"keyboard.png"), for: [])
-        self.nextKeyboardButton.setTitle(NSLocalizedString("Change Keyboard", comment: "Title for 'Next Keyboard' button"), for: [])
+        // Add next keyboard
+        self.nextKeyboardButton = UIButton(type: .system)        
+        self.nextKeyboardButton.backgroundColor = UIColor.init(white: 1, alpha: 1)        
+        
+        self.nextKeyboardButton.setImage(UIImage.fontAwesomeIcon(name: .keyboardO, textColor: UIColor.black, size: CGSize(width: 30, height: 30)), for: [])
+        
         self.nextKeyboardButton.sizeToFit()
         
-        self.nextKeyboardButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        self.nextKeyboardButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         self.nextKeyboardButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         self.nextKeyboardButton.translatesAutoresizingMaskIntoConstraints = false
@@ -41,31 +57,25 @@ class KeyboardViewController: UIInputViewController {
         
         self.nextKeyboardButton.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
         self.nextKeyboardButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        
+        NSLog("Keyboard color \(self.nextKeyboardButton)")
         // Make Letter keys
-        let alphaCharacters = ["꓿", "ꓪ", "ꓰ", "ꓣ", "ꓔ", "ꓬ", "ꓴ", "ꓲ", "ꓳ", "ꓑ","ꓮ", "ꓢ", "ꓓ", "ꓝ", "ꓖ", "ꓧ", "ꓙ", "ꓗ", "ꓡ", "ꓜ", "ꓫ", "ꓚ", "ꓦ", "ꓐ", "ꓠ", "ꓳ"]
+        alphaCharacters = ["꓿", "ꓪ", "ꓰ", "ꓣ", "ꓔ", "ꓬ", "ꓴ", "ꓲ", "ꓳ", "ꓑ","ꓮ", "ꓢ", "ꓓ", "ꓝ", "ꓖ", "ꓧ", "ꓙ", "ꓗ", "ꓡ", "ꓜ", "ꓫ", "ꓚ", "ꓦ", "ꓐ", "ꓠ", "ꓳ"]
         
         // Make empty button array to append to letter
-        var keys = [UIView]()
+        var keys = [UIButton]()
         
         // Loop over alphaCharacters to create key butons
-        for alphaChar in alphaCharacters {
-            keys.append(makeButton(character: alphaChar))
+        for (i,alphaChar) in alphaCharacters.enumerated() {
+            keys.append(makeButton(character: alphaChar, tag: i))
         }
         
         // Add button to self.view
         for key in keys {
             self.view.addSubview(key)
         }
-        
-        self.addBackspace()
-        
+      
         // Add letter key constraints
         
-        // Constants describing number of keys in each row
-        // Bottom row will take up slack/overflow
-        let topRowNumButtons = 10
-        let midRowNumButtons = 9
         
         // Loop over buttons array setting constrains
         for(i, button) in keys.enumerated() {
@@ -111,86 +121,126 @@ class KeyboardViewController: UIInputViewController {
                 }
             }
         }
-    }
-    
-    func addBackspace() {
-        // Backspace key
         
-        // Make backspace key
-        let backspaceKey = makeButton(character: "<X")
+        // Add backspace button
+        let backspaceKey = UIButton(type: .system)
         
-        // Set tag so we can identify backspace key when processing touches
-        // 10 is arbitrary. However, UIView has a default tag 0.
+        // Add next keyboard
+        backspaceKey.backgroundColor = UIColor.init(white: 1, alpha: 1)
         
-        backspaceKey.tag = 10
+        backspaceKey.setImage(UIImage.fontAwesomeIcon(name: .windowCloseO, textColor: UIColor.black, size: CGSize(width: 30, height: 30)), for: [])
         
-        // Add backspace key to self.view
+        backspaceKey.sizeToFit()
+        
+        backspaceKey.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        backspaceKey.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        backspaceKey.translatesAutoresizingMaskIntoConstraints = false
+        
+        backspaceKey.addTarget(self, action: #selector(KeyboardViewController.backspaceOnePressed), for: .touchUpInside)
+        backspaceKey.addTarget(self, action: #selector(KeyboardViewController.backspaceLongPressed), for: .touchDown)
+        
         self.view.addSubview(backspaceKey)
         
-        // Set constraints for lower right corner position
-        // Align right side of backspace key with right side of self.view
         backspaceKey.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-        
-        // Align bottom of backspace key with bottomof self.view
         backspaceKey.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
     }
     
-    func makeButton(character: String) -> UIView {
-        
-        // Create the button
-        let button = UIView()
-        button.backgroundColor = UIColor.init(white: 1, alpha: 1)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Create button label
-        let buttonLabel = UILabel()
-        buttonLabel.translatesAutoresizingMaskIntoConstraints = false
-        buttonLabel.text = character
-        
-        // Add button label to button
-        button.addSubview(buttonLabel)
-        
-        // Add button to self.view
-        self.view.addSubview(button)
-        
-        // Center button label within button
-        buttonLabel.centerXAnchor.constraint(equalTo: button.centerXAnchor).isActive = true
-        buttonLabel.centerYAnchor.constraint(equalTo: button.centerYAnchor).isActive = true
-        
-        // Center button with self.view
-        //button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        //button.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        
-        // Set button's width and height
-        button.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        return button
+    func backspaceLongPressed() {
+        backspaceButtonTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(KeyboardViewController.backspaceDelete), userInfo: nil, repeats: true)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // Call the super class
-        super.touchesBegan(touches, with: event)
-        
-        // Get user's touch
-        let touch = touches.first
-        // Get the coordinates of the touch
-        let touchPoint = touch?.location(in: self.view)
-        // Get the view (key) the touch is in
-        let touchView = self.view.hitTest(touchPoint!, with: nil)
-        // if key is backspace
-        if touchView?.tag == 10 {
-            // backspace one character and early return
-            self.textDocumentProxy.deleteBackward()
-            return
-        }
-        // Get the key's label
-        let touchViewLabel = touchView?.subviews[0]
-        // Downcast the label from UIView to UILabel so we can access the "text" property
-        let touchViewLabelRaw = touchViewLabel as! UILabel
-        // Insert the label's text into the text field
-        textDocumentProxy.insertText(touchViewLabelRaw.text!)
+    func backspaceOnePressed() {
+        backspaceButtonTimer.invalidate()
+        self.backspaceDelete()
     }
+    
+    func backspaceDelete() {
+        self.textDocumentProxy.deleteBackward()
+    }
+    
+    func keyPressedOnce(sender: UIButton) {
+        textDocumentProxy.insertText(self.alphaCharacters[sender.tag])
+    }
+    
+    func makeButton(character: String, tag: Int) -> UIButton {
+        
+        // Add backspace button
+        let backspaceKey = UIButton()
+        // Add next keyboard
+        backspaceKey.backgroundColor = UIColor.init(white: 1, alpha: 1)
+        
+        backspaceKey.setTitle(character, for: [])
+        backspaceKey.setTitleColor(UIColor.darkGray, for: [])
+        backspaceKey.tag = tag
+        //backspaceKey.setImage(UIImage.fontAwesomeIcon(name: .windowCloseO, textColor: UIColor.black, size: CGSize(width: 30, height: 30)), for: [])
+        
+        backspaceKey.sizeToFit()
+        
+        backspaceKey.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
+        backspaceKey.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        backspaceKey.translatesAutoresizingMaskIntoConstraints = false
+        
+        backspaceKey.addTarget(self, action: #selector(KeyboardViewController.keyPressedOnce), for: .touchUpInside)
+        //backspaceKey.addTarget(self, action: #selector(KeyboardViewController.backspaceLongPressed), for: .touchDown)
+        
+        
+//        // Create the button
+//        let button = UIView()
+//        button.backgroundColor = UIColor.init(white: 1, alpha: 1)
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        // Create button label
+//        let buttonLabel = UILabel()
+//        buttonLabel.translatesAutoresizingMaskIntoConstraints = false
+//        buttonLabel.text = character
+//        
+//        // Add button label to button
+//        button.addSubview(buttonLabel)
+//        
+//        // Add button to self.view
+//        self.view.addSubview(button)
+//        
+//        // Center button label within button
+//        buttonLabel.centerXAnchor.constraint(equalTo: button.centerXAnchor).isActive = true
+//        buttonLabel.centerYAnchor.constraint(equalTo: button.centerYAnchor).isActive = true
+//        
+//        // Center button with self.view
+//        //button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+//        //button.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+//        
+//        // Set button's width and height
+//        button.widthAnchor.constraint(equalToConstant: 30).isActive = true
+//        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
+//        
+//        return button
+        return backspaceKey
+    }
+    
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        // Call the super class
+//        super.touchesBegan(touches, with: event)
+//        
+//        // Get user's touch
+//        let touch = touches.first
+//        // Get the coordinates of the touch
+//        let touchPoint = touch?.location(in: self.view)
+//        // Get the view (key) the touch is in
+//        let touchView = self.view.hitTest(touchPoint!, with: nil)
+//        // if key is backspace
+//        if touchView?.tag == 10 {
+//            // backspace one character and early return
+//            self.textDocumentProxy.deleteBackward()
+//            return
+//        }
+//        // Get the key's label
+//        let touchViewLabel = touchView?.subviews[0]
+//        // Downcast the label from UIView to UILabel so we can access the "text" property
+//        let touchViewLabelRaw = touchViewLabel as! UILabel
+//        // Insert the label's text into the text field
+//        textDocumentProxy.insertText(touchViewLabelRaw.text!)
+//    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

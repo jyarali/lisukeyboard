@@ -14,6 +14,15 @@
 		FC471C711E0A4EDE00D80209 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC471C6F1E0A4EDE00D80209 /* LaunchScreen.storyboard */; };
 		FC471C7F1E0B08A500D80209 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471C7E1E0B08A500D80209 /* KeyboardViewController.swift */; };
 		FC471C831E0B08A500D80209 /* lisu keyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FC471C7C1E0B08A500D80209 /* lisu keyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FC471C8A1E0B368B00D80209 /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471C891E0B368B00D80209 /* Key.swift */; };
+		FC471C9A1E0B381200D80209 /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471C951E0B381200D80209 /* Enum.swift */; };
+		FC471C9B1E0B381200D80209 /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471C951E0B381200D80209 /* Enum.swift */; };
+		FC471C9C1E0B381200D80209 /* FontAwesome.otf in Resources */ = {isa = PBXBuildFile; fileRef = FC471C971E0B381200D80209 /* FontAwesome.otf */; };
+		FC471C9D1E0B381200D80209 /* FontAwesome.otf in Resources */ = {isa = PBXBuildFile; fileRef = FC471C971E0B381200D80209 /* FontAwesome.otf */; };
+		FC471C9E1E0B381200D80209 /* FontAwesome.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471C981E0B381200D80209 /* FontAwesome.swift */; };
+		FC471C9F1E0B381200D80209 /* FontAwesome.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471C981E0B381200D80209 /* FontAwesome.swift */; };
+		FC471CA01E0B381200D80209 /* FontAwesomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471C991E0B381200D80209 /* FontAwesomeView.swift */; };
+		FC471CA11E0B381200D80209 /* FontAwesomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471C991E0B381200D80209 /* FontAwesomeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +60,12 @@
 		FC471C7C1E0B08A500D80209 /* lisu keyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "lisu keyboard.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC471C7E1E0B08A500D80209 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		FC471C801E0B08A500D80209 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FC471C891E0B368B00D80209 /* Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
+		FC471C951E0B381200D80209 /* Enum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Enum.swift; path = "lisu keyboard/Enum.swift"; sourceTree = "<group>"; };
+		FC471C961E0B381200D80209 /* FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontAwesome.h; path = "lisu keyboard/FontAwesome.h"; sourceTree = "<group>"; };
+		FC471C971E0B381200D80209 /* FontAwesome.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.otf; path = "lisu keyboard/FontAwesome.otf"; sourceTree = "<group>"; };
+		FC471C981E0B381200D80209 /* FontAwesome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FontAwesome.swift; path = "lisu keyboard/FontAwesome.swift"; sourceTree = "<group>"; };
+		FC471C991E0B381200D80209 /* FontAwesomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FontAwesomeView.swift; path = "lisu keyboard/FontAwesomeView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,7 +90,9 @@
 			isa = PBXGroup;
 			children = (
 				FC471C651E0A4EDE00D80209 /* lisuKeyboard */,
+				FC471C881E0B365F00D80209 /* Model */,
 				FC471C7D1E0B08A500D80209 /* lisu keyboard */,
+				FC471C941E0B376300D80209 /* FontAwesome */,
 				FC471C641E0A4EDE00D80209 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -109,6 +126,27 @@
 				FC471C801E0B08A500D80209 /* Info.plist */,
 			);
 			path = "lisu keyboard";
+			sourceTree = "<group>";
+		};
+		FC471C881E0B365F00D80209 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FC471C891E0B368B00D80209 /* Key.swift */,
+			);
+			name = Model;
+			path = lisuKeyboard;
+			sourceTree = "<group>";
+		};
+		FC471C941E0B376300D80209 /* FontAwesome */ = {
+			isa = PBXGroup;
+			children = (
+				FC471C951E0B381200D80209 /* Enum.swift */,
+				FC471C961E0B381200D80209 /* FontAwesome.h */,
+				FC471C971E0B381200D80209 /* FontAwesome.otf */,
+				FC471C981E0B381200D80209 /* FontAwesome.swift */,
+				FC471C991E0B381200D80209 /* FontAwesomeView.swift */,
+			);
+			name = FontAwesome;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,6 +236,7 @@
 			files = (
 				FC471C711E0A4EDE00D80209 /* LaunchScreen.storyboard in Resources */,
 				FC471C6E1E0A4EDE00D80209 /* Assets.xcassets in Resources */,
+				FC471C9C1E0B381200D80209 /* FontAwesome.otf in Resources */,
 				FC471C6C1E0A4EDE00D80209 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -206,6 +245,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC471C9D1E0B381200D80209 /* FontAwesome.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,8 +256,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC471C9E1E0B381200D80209 /* FontAwesome.swift in Sources */,
 				FC471C691E0A4EDE00D80209 /* ViewController.swift in Sources */,
 				FC471C671E0A4EDE00D80209 /* AppDelegate.swift in Sources */,
+				FC471C9A1E0B381200D80209 /* Enum.swift in Sources */,
+				FC471C8A1E0B368B00D80209 /* Key.swift in Sources */,
+				FC471CA01E0B381200D80209 /* FontAwesomeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,7 +269,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC471C9B1E0B381200D80209 /* Enum.swift in Sources */,
+				FC471C9F1E0B381200D80209 /* FontAwesome.swift in Sources */,
 				FC471C7F1E0B08A500D80209 /* KeyboardViewController.swift in Sources */,
+				FC471CA11E0B381200D80209 /* FontAwesomeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,6 +472,7 @@
 				FC471C771E0A4EDE00D80209 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FC471C841E0B08A500D80209 /* Build configuration list for PBXNativeTarget "lisu keyboard" */ = {
 			isa = XCConfigurationList;
@@ -433,6 +481,7 @@
 				FC471C861E0B08A500D80209 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
