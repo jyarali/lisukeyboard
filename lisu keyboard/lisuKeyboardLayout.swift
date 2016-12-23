@@ -18,10 +18,12 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     var firstRowKeys : [Key] = []
     
     let keyWidth = viewWidth / CGFloat(firstRow.count)
+    let keyHeight = viewHeight / 4.0
+    
     
     // First Row
     for currChar in firstRow {
-        let currKey = Key(type: .character, keyValue: currChar, width: keyWidth, height: keyWidth, color: UIColor.darkGray, parentView: controller.view)
+        let currKey = Key(type: .character, keyValue: currChar, width: keyWidth, height: keyHeight, color: UIColor.darkGray, parentView: controller.view)
         firstRowKeys.append(currKey)
     }
     // Add constraints for first row
@@ -45,7 +47,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     
     // Create buttons
     for currChar in secondRow {
-        let currKey = Key(type: .character, keyValue: currChar, width: keyWidth, height: keyWidth, color: UIColor.darkGray, parentView: controller.view)
+        let currKey = Key(type: .character, keyValue: currChar, width: keyWidth, height: keyHeight, color: UIColor.darkGray, parentView: controller.view)
         secondRowKeys.append(currKey)
     }
     // Add constraints for second row
@@ -68,17 +70,17 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     let shiftDeleteWidth = (viewWidth - (keyWidth * CGFloat(thirdRow.count)))/2
     
     // Shift
-    let shiftKey = Key(type: .shift, keyValue: "⇧", width: shiftDeleteWidth, height: keyWidth, color: UIColor.darkGray, parentView: controller.view)
+    let shiftKey = Key(type: .shift, keyValue: "⇧", width: shiftDeleteWidth, height: keyHeight, color: UIColor.darkGray, parentView: controller.view)
     thirdRowKeys.append(shiftKey)
     
     // Keys between shift and backspace
     for currChar in thirdRow {
-        let currKey = Key(type: .character, keyValue: currChar, width: keyWidth, height: keyWidth, color: UIColor.darkGray, parentView: controller.view)
+        let currKey = Key(type: .character, keyValue: currChar, width: keyWidth, height: keyHeight, color: UIColor.darkGray, parentView: controller.view)
         thirdRowKeys.append(currKey)
     }
     
     // Backspace
-    let deleteKey = Key(type: .backspace, keyValue: "<", width: shiftDeleteWidth, height: keyWidth, color: UIColor.darkGray, parentView: controller.view)
+    let deleteKey = Key(type: .backspace, keyValue: "<", width: shiftDeleteWidth, height: keyHeight, color: UIColor.darkGray, parentView: controller.view)
     thirdRowKeys.append(deleteKey)
     
     // Add constraints for third row
@@ -98,23 +100,23 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     
     
     // Change to number button
-    let numberSwitchKey = Key(type: .modeChange, keyValue: "123", width: keyWidth, height: keyWidth, color: UIColor.darkGray, parentView: controller.view)
+    let numberSwitchKey = Key(type: .modeChange, keyValue: "123", width: keyWidth, height: keyHeight, color: UIColor.darkGray, parentView: controller.view)
     lastRowKeys.append(numberSwitchKey)
     
     // Change keyboard button
-    let changeKeyboard = Key(type: .keyboardChange, keyIcon: .keyboardO, controlState: [], width: keyWidth, height: keyWidth, color: UIColor.darkGray, parentView: controller.view)
+    let changeKeyboard = Key(type: .keyboardChange, keyIcon: .keyboardO, controlState: [], width: keyWidth, height: keyHeight, color: UIColor.darkGray, parentView: controller.view)
     lastRowKeys.append(changeKeyboard)
     
     // Spacebar button
-    let spaceKey = Key(type: .backspace, keyValue: "Space", width: keyWidth * 6.0, height: keyWidth, color: UIColor.darkGray, parentView: controller.view)
+    let spaceKey = Key(type: .backspace, keyValue: "Space", width: keyWidth * 6.0, height: keyHeight, color: UIColor.darkGray, parentView: controller.view)
     lastRowKeys.append(spaceKey)
     
     // Period button
-    let periodKey = Key(type: .period, keyValue: "꓿", width: keyWidth, height: keyWidth, color: UIColor.darkGray, parentView: controller.view)
+    let periodKey = Key(type: .period, keyValue: "꓿", width: keyWidth, height: keyHeight, color: UIColor.darkGray, parentView: controller.view)
     lastRowKeys.append(periodKey)
     
     // Return button
-    let enterKey = Key(type: .enter, keyValue: "E", width: keyWidth, height: keyWidth, color: UIColor.darkGray, parentView: controller.view)
+    let enterKey = Key(type: .enter, keyValue: "E", width: keyWidth, height: keyHeight, color: UIColor.darkGray, parentView: controller.view)
     lastRowKeys.append(enterKey)
     
     // Add constraints for third row

@@ -36,6 +36,8 @@ class Key{
         parentView.addSubview(self.button)
         
         self.button.backgroundColor = UIColor.init(white: 1, alpha: 1)
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
         
         // Check if it's character or icon
         if keyIcon == nil {

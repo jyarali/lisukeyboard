@@ -21,8 +21,9 @@ class KeyboardViewController: UIInputViewController {
     let midRowNumButtons = 9
     let bottomRowNumButtons = 9
     
-    var viewWidth: CGFloat = 0.0
-    var viewHeight: CGFloat = 0.0
+    // Calculate the viewWidth and viewHeight of the View
+    var viewWidth: CGFloat = UIScreen.main.bounds.width
+    var viewHeight: CGFloat = 216 // To Do : Get height of the UIInputViewController.view's Height programmatically
     var buttonWidth: CGFloat = 0
     
     var keyboard : Keyboard?
@@ -33,19 +34,45 @@ class KeyboardViewController: UIInputViewController {
         // Add custom view sizing constraints here
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.removeAllSubView()
+        if UIScreen.main.bounds.width > UIScreen.main.bounds.height {
+            // Landscape
+            viewWidth = size.width
+            viewHeight = 162 // To Do : Get height of the UIInputViewController.view's Height programmatically
+        } else {
+            viewWidth = size.width
+            viewHeight = 216
+        }
+        self.viewDidLoad()
+    }
+    
+    // Remove everything from subView
+    func removeAllSubView() {
+        NSLog("Cleaning subviews")
+        for v in self.view.subviews{
+            v.removeFromSuperview()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        let button = UIButton()
-        NSLog("Button", button.superview ?? "nil")
-        // Calculate the viewWidth and viewHeight
-        viewWidth = UIScreen.main.bounds.width
+        // TODO : get viewHeight programmatically
+//        let isPad = UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad
+        //        viewWidth 375.0 * 216.0
+        // 667*216
+
+//        let portraitViewHeight = (isPad ? CGFloat(264) : CGFloat(self.interfaceOrientation.isPortrait && viewWidth >= 400 ? 226 : 216))
+//        //let landscapeViewHeight = (isPad ? CGFloat(352) : CGFloat(162))
         
-        
-        viewHeight = UIScreen.main.bounds.height
+        //viewHeight = UIScreen.main.bounds.height
         NSLog("viewWidth \(viewWidth) * \(viewHeight)")
         NSLog("Calling keybaord")
         keyboard = lisuKeyboardLayout(controller: self, viewWidth: viewWidth, viewHeight: viewHeight)
         NSLog("Called")
+        
+        
         for row in (keyboard?.keys)! {
             for key in row {
                 self.view.addSubview(key.button)
