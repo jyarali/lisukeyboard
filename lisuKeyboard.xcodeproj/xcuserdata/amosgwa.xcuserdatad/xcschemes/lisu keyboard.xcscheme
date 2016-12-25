@@ -67,8 +67,12 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <RemoteRunnable
+         runnableDebuggingMode = "1"
+         BundleIdentifier = "com.amosgwa.lisuKeyboard"
+         RemotePath = "/Users/amosgwa/Library/Developer/CoreSimulator/Devices/797A7418-B512-4D31-9156-8FC564232A0E/data/Containers/Bundle/Application/E87959F6-E0D9-4292-BEF3-2AD5D1751FDD/lisuKeyboard.app">
+      </RemoteRunnable>
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FC471C621E0A4EDE00D80209"
@@ -76,7 +80,14 @@
             BlueprintName = "lisuKeyboard"
             ReferencedContainer = "container:lisuKeyboard.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "OS_ACTIVITY_MODE"
+            value = "disable"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

@@ -20,7 +20,6 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     let keyWidth = viewWidth / CGFloat(firstRow.count)
     let keyHeight = viewHeight / 4.0
     
-    
     // First Row
     for currChar in firstRow {
         let currKey = Key(type: .character, keyValue: currChar, width: keyWidth, height: keyHeight, color: UIColor.darkGray, parentView: controller.view)
@@ -97,8 +96,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     
     // Last Row
     var lastRowKeys : [Key] = []
-    
-    
+        
     // Change to number button
     let numberSwitchKey = Key(type: .modeChange, keyValue: "123", width: keyWidth, height: keyHeight, color: UIColor.darkGray, parentView: controller.view)
     lastRowKeys.append(numberSwitchKey)

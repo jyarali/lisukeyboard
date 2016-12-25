@@ -14,41 +14,105 @@ class KeyboardViewController: UIInputViewController {
     var backspaceButtonTimer: Timer!
     var alphaCharacters : [String] = []
     
-    
     // Constants describing number of keys in each row
     // Bottom row will take up slack/overflow
     let topRowNumButtons = 10
     let midRowNumButtons = 9
     let bottomRowNumButtons = 9
     
-    // Calculate the viewWidth and viewHeight of the View
-    var viewWidth: CGFloat = UIScreen.main.bounds.width
-    var viewHeight: CGFloat = 216 // To Do : Get height of the UIInputViewController.view's Height programmatically
-    var buttonWidth: CGFloat = 0
+    // viewWidth and viewHeight of the keyboard view
+    var viewWidth: CGFloat = 0
+    var viewHeight: CGFloat = 0
+    
+    var portraitSize: CGSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+    var landscapeSize: CGSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+    var isPortrait = true
     
     var keyboard : Keyboard?
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
-        
         // Add custom view sizing constraints here
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Determine the device
+        let deviceType = UIDevice.current.userInterfaceIdiom
+        
+        if deviceType == .phone {
+            // iPhone
+            // Portrait 375 x 216
+            // Width 100% Height 32%
+            
+            // Landscape 667 x 162
+            // Wdith 100% Height 43%
+            // Determine the orientation of the device initially
+            if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
+                // Portrait
+                portraitSize.height = UIScreen.main.bounds.height * 0.32
+                
+                viewWidth = portraitSize.width
+                viewHeight = portraitSize.height
+                
+                landscapeSize.height = UIScreen.main.bounds.width * 0.43
+                landscapeSize.width = UIScreen.main.bounds.height
+            } else {
+                // Landscape
+                isPortrait = false
+                landscapeSize.height = UIScreen.main.bounds.height * 0.43
+                
+                viewWidth = landscapeSize.width
+                viewHeight = landscapeSize.height
+                
+                portraitSize.height = UIScreen.main.bounds.height * 0.32
+                portraitSize.width = UIScreen.main.bounds.height
+            }
+        } else {
+            // iPad
+    
+        }
+    }
+    var count = 0
+    
+    // When changing orientation, change the keyboard height and width
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        self.removeAllSubView()
-        if UIScreen.main.bounds.width > UIScreen.main.bounds.height {
-            // Landscape
-            viewWidth = size.width
-            viewHeight = 162 // To Do : Get height of the UIInputViewController.view's Height programmatically
-        } else {
-            viewWidth = size.width
-            viewHeight = 216
+        
+        // Check if the orientation has definitely changed from landscape to portrait or viceversa.
+        // This is to prevent flipping landscapes. The device will rotate with the same width.
+        // viewWidth != size.width
+        
+        NSLog("change orientation \(viewWidth) x  \(viewHeight)")
+        NSLog("change orientation \(size.width) x  \(size.height)")
+        
+        if size.width != viewWidth {
+            isPortrait = !isPortrait
+            
+            if isPortrait {
+                viewHeight = portraitSize.height
+                viewWidth = portraitSize.width
+            } else {
+                viewHeight = landscapeSize.height
+                viewWidth = landscapeSize.width
+            }
+            
+            // Change the view width and height
+            coordinator.animateAlongsideTransition(in: self.view, animation: {(_ context: UIViewControllerTransitionCoordinatorContext) -> Void in
+                self.renderKeys()
+            }, completion: {(_ context: UIViewControllerTransitionCoordinatorContext) -> Void in
+                //Done animation
+            })
         }
-        self.viewDidLoad()
     }
     
-    // Remove everything from subView
+    // Check if the orientation has changed
+    func orientationChanged(now: CGSize, to: CGSize) -> Bool {
+        return  true
+    }
+    
+    // Remove key from the sub view.
     func removeAllSubView() {
         NSLog("Cleaning subviews")
         for v in self.view.subviews{
@@ -56,23 +120,16 @@ class KeyboardViewController: UIInputViewController {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // TODO : get viewHeight programmatically
-//        let isPad = UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad
-        //        viewWidth 375.0 * 216.0
-        // 667*216
-
-//        let portraitViewHeight = (isPad ? CGFloat(264) : CGFloat(self.interfaceOrientation.isPortrait && viewWidth >= 400 ? 226 : 216))
-//        //let landscapeViewHeight = (isPad ? CGFloat(352) : CGFloat(162))
+    // Render Keys
+    func renderKeys() {
         
-        //viewHeight = UIScreen.main.bounds.height
-        NSLog("viewWidth \(viewWidth) * \(viewHeight)")
-        NSLog("Calling keybaord")
+        // Remove all of the existing keys before rendering
+        self.removeAllSubView()
+        NSLog("Calling keyboard")
         keyboard = lisuKeyboardLayout(controller: self, viewWidth: viewWidth, viewHeight: viewHeight)
         NSLog("Called")
         
-        
+        // Add the keys to the View
         for row in (keyboard?.keys)! {
             for key in row {
                 self.view.addSubview(key.button)
@@ -80,120 +137,14 @@ class KeyboardViewController: UIInputViewController {
         }
         
         self.nextKeyboardButton = keyboard?.getChangeKyboardButton()
-//
-//        // Add next keyboard
-//        self.nextKeyboardButton = UIButton(type: .system)        
-//        self.nextKeyboardButton.backgroundColor = UIColor.init(white: 1, alpha: 1)        
-//        
-//        self.nextKeyboardButton.setImage(UIImage.fontAwesomeIcon(name: .keyboardO, textColor: UIColor.black, size: CGSize(width: 30, height: 30)), for: [])
-//        
-//        self.nextKeyboardButton.sizeToFit()
-//        
-//        self.nextKeyboardButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-//        self.nextKeyboardButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-//        
-//        self.nextKeyboardButton.translatesAutoresizingMaskIntoConstraints = false
-//        
+        
         self.nextKeyboardButton.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
-//        
-//        self.view.addSubview(self.nextKeyboardButton)
-//        
-//        self.nextKeyboardButton.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-//        self.nextKeyboardButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-//        NSLog("Keyboard color \(self.nextKeyboardButton)")
-//        // Make Letter keys
-//        alphaCharacters = ["ꓹꓼ", "ꓪ", "ꓰ", "ꓣ", "ꓔ", "ꓬ", "ꓴ", "ꓲ", "ꓳ", "ꓑ","ꓮ", "ꓢ", "ꓓ", "ꓝ", "ꓖ", "ꓧ", "ꓙ", "ꓗ", "ꓡ", "shift", "ꓜ", "ꓫ", "ꓚ", "ꓦ", "ꓐ", "ꓠ", "ꓟ", "backspace", "123","changekeyboard", "space","꓿","return"]
-//        
-//        // Make empty button array to append to letter
-//        var keys = [UIButton]()
-//        
-//        // Loop over alphaCharacters to create key butons
-//        for (i,alphaChar) in alphaCharacters.enumerated() {
-//            keys.append(makeButton(character: alphaChar, tag: i))
-//        }
-//        
-//        // Add button to self.view
-//        for key in keys {
-//            self.view.addSubview(key)
-//        }
-//      
-//        // Add letter key constraints
-//        
-//        
-//        // Loop over buttons array setting constrains
-//        for(i, button) in keys.enumerated() {
-//            // consider each row of the keyboard
-//            if i < topRowNumButtons {
-//                // Top ROW
-//                
-//                // Align the top of all buttons in row with the top of self.view
-//                button.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
-//                
-//                if i == 0 {
-//                    // align the left most button left side with the left side of self.view
-//                    button.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-//                } else {
-//                    // else align left side of button with right side of button to the left
-//                    button.leftAnchor.constraint(equalTo: keys[i-1].rightAnchor).isActive = true
-//                }
-//            } else if i < topRowNumButtons + midRowNumButtons {
-//                // Mid Row
-//                
-//                // Align top of all buttons in row with bottom of top row's first button
-//                button.topAnchor.constraint(equalTo: keys[0].bottomAnchor).isActive = true
-//                
-//                if i == topRowNumButtons {
-//                    // align the leftmost button's left side with the left side of self.view
-//                    // Padding left 
-//                    let paddingLeft = (viewWidth - (buttonWidth * CGFloat(midRowNumButtons)))/2
-//                    button.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: paddingLeft).isActive = true
-//                    //button.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-//                } else {
-//                    // Else align left side of button with right side of button to the left
-//                    button.leftAnchor.constraint(equalTo: keys[i-1].rightAnchor).isActive = true
-//                }
-//            } else if i < topRowNumButtons + midRowNumButtons + bottomRowNumButtons {
-//                // BOTTOM ROW
-//                
-//                // align top of all buttons in row with bottom of mid row's first button
-//                button.topAnchor.constraint(equalTo: keys[topRowNumButtons].bottomAnchor).isActive = true
-//                
-//                if i == topRowNumButtons + midRowNumButtons {
-//                    // align the leftmost button's left side with the left side of self.view
-//                    button.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-//                } else {
-//                    // else align left side of button with right side of button to the left
-//                    button.leftAnchor.constraint(equalTo: keys[i - 1].rightAnchor).isActive = true
-//                }
-//            } else {
-//                // The remaining ROW
-//                
-//                
-//            }
-//        }
-//        
-//        // Add backspace button
-//        let backspaceKey = UIButton(type: .system)
-//        
-//        // Add next keyboard
-//        backspaceKey.backgroundColor = UIColor.init(white: 1, alpha: 1)
-//        
-//        backspaceKey.setImage(UIImage.fontAwesomeIcon(name: .windowCloseO, textColor: UIColor.black, size: CGSize(width: 30, height: 30)), for: [])
-//        
-//        backspaceKey.sizeToFit()
-//        
-//        backspaceKey.widthAnchor.constraint(equalToConstant: 50).isActive = true
-//        backspaceKey.heightAnchor.constraint(equalToConstant: 50).isActive = true
-//        
-//        backspaceKey.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        backspaceKey.addTarget(self, action: #selector(KeyboardViewController.backspaceOnePressed), for: .touchUpInside)
-//        backspaceKey.addTarget(self, action: #selector(KeyboardViewController.backspaceLongPressed), for: .touchDown)
-//        
-//        self.view.addSubview(backspaceKey)
-//        
-//        backspaceKey.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-//        backspaceKey.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.renderKeys()
+        NSLog("Calling viewDidAppear")
     }
     
     func backspaceLongPressed() {
@@ -229,45 +180,14 @@ class KeyboardViewController: UIInputViewController {
         
         backspaceKey.sizeToFit()
         
-        backspaceKey.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
+        //backspaceKey.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
         backspaceKey.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         backspaceKey.translatesAutoresizingMaskIntoConstraints = false
         
         backspaceKey.addTarget(self, action: #selector(KeyboardViewController.keyPressedOnce), for: .touchUpInside)
         //backspaceKey.addTarget(self, action: #selector(KeyboardViewController.backspaceLongPressed), for: .touchDown)
-        
-        print("View height", self)
-        
-//        // Create the button
-//        let button = UIView()
-//        button.backgroundColor = UIColor.init(white: 1, alpha: 1)
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        // Create button label
-//        let buttonLabel = UILabel()
-//        buttonLabel.translatesAutoresizingMaskIntoConstraints = false
-//        buttonLabel.text = character
-//        
-//        // Add button label to button
-//        button.addSubview(buttonLabel)
-//        
-//        // Add button to self.view
-//        self.view.addSubview(button)
-//        
-//        // Center button label within button
-//        buttonLabel.centerXAnchor.constraint(equalTo: button.centerXAnchor).isActive = true
-//        buttonLabel.centerYAnchor.constraint(equalTo: button.centerYAnchor).isActive = true
-//        
-//        // Center button with self.view
-//        //button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-//        //button.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-//        
-//        // Set button's width and height
-//        button.widthAnchor.constraint(equalToConstant: 30).isActive = true
-//        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-//        
-//        return button
+    
         return backspaceKey
     }
     
@@ -314,7 +234,9 @@ class KeyboardViewController: UIInputViewController {
         } else {
             textColor = UIColor.black
         }
-        self.nextKeyboardButton.setTitleColor(textColor, for: [])
+        if (self.nextKeyboardButton != nil) {
+            self.nextKeyboardButton.setTitleColor(textColor, for: [])
+        }
     }
     
 }
