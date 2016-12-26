@@ -12,32 +12,76 @@ class KeyboardViewController: UIInputViewController {
     
     @IBOutlet var nextKeyboardButton: UIButton!
     var backspaceButtonTimer: Timer!
-    var alphaCharacters : [String] = []
-    
-    // Constants describing number of keys in each row
-    // Bottom row will take up slack/overflow
-    let topRowNumButtons = 10
-    let midRowNumButtons = 9
-    let bottomRowNumButtons = 9
-    
-    // viewWidth and viewHeight of the keyboard view
-    var viewWidth: CGFloat = 0
-    var viewHeight: CGFloat = UIScreen.main.bounds.height / 3
     
     // Custom height for keyboard
     var heightConstraint:NSLayoutConstraint? = nil
     
-    var portraitSize: CGSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-    var landscapeSize: CGSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-    var isPortrait = true
+    // viewWidth and viewHeight of the keyboard view
+    var viewWidth: CGFloat = 0
+    var viewHeight: CGFloat = 0
     
-    var keyboard : Keyboard?
+    var portraitSize: CGSize = CGSize(width: 0, height: 0)
+    var landscapeSize: CGSize = CGSize(width: 0, height: 0)
+    
+    // Check if the device is in portrait mode initially.
+    var isPortrait = UIScreen.main.bounds.height > UIScreen.main.bounds.width
+    
+    // Keyborard current page : unshift, shift, 123
+    var currPage = "unshift"
+    var keyboard : Keyboard = Keyboard()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.setCustomWidthHeight()
+        
+        self.renderKeys()
+    }
+    
+    func setCustomWidthHeight(){
+        
+        // Determine the device
+        let deviceType = UIDevice.current.userInterfaceIdiom
+        
+        NSLog("DeviceType \(deviceType.rawValue)")
+        
+        if deviceType == .phone || deviceType == .pad {
+            // Set the width and height based on the initial orientation.
+            if isPortrait {
+                // Portrait
+                portraitSize.width = UIScreen.main.bounds.width
+                portraitSize.height = UIScreen.main.bounds.height * 0.32
+                
+                viewWidth = portraitSize.width
+                viewHeight = portraitSize.height
+                
+                // Landscape
+                landscapeSize.height = UIScreen.main.bounds.width * 0.43
+                landscapeSize.width = UIScreen.main.bounds.height
+            } else {
+                // Landscape
+                landscapeSize.width = UIScreen.main.bounds.width
+                landscapeSize.height = UIScreen.main.bounds.height * 0.43
+                
+                viewWidth = landscapeSize.width
+                viewHeight = landscapeSize.height
+                
+                // Portrait
+                portraitSize.height = UIScreen.main.bounds.height * 0.32
+                portraitSize.width = UIScreen.main.bounds.height
+            }
+        }
+        
+        NSLog("UIScreen bounds \(UIScreen.main.bounds.width) x \(UIScreen.main.bounds.height)")
+        
+        NSLog("Portrait bounds \(portraitSize.width) x \(portraitSize.height)")
+        
+        NSLog("Landscape bounds \(landscapeSize.width) x \(landscapeSize.height)")
+    }
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
-        // Add custom view sizing constraints here
-        
-        // Change the view constraint
+        // Change the view constraint to custom.
         NSLog("Updating view constraint \(viewHeight)")
         if heightConstraint == nil {
             heightConstraint = NSLayoutConstraint(item: self.view,
@@ -53,46 +97,6 @@ class KeyboardViewController: UIInputViewController {
             heightConstraint?.constant = viewHeight
         }
     }
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Determine the device
-        let deviceType = UIDevice.current.userInterfaceIdiom
-        
-        NSLog("DeviceType \(deviceType.rawValue)")
-        
-        if deviceType == .phone || deviceType == .pad {
-            if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
-                // Portrait
-                portraitSize.height = UIScreen.main.bounds.height * 0.32
-                
-                viewWidth = portraitSize.width
-                viewHeight = portraitSize.height
-                
-                landscapeSize.height = UIScreen.main.bounds.width * 0.43
-                landscapeSize.width = UIScreen.main.bounds.height
-            } else {
-                // Landscape
-                isPortrait = false
-                landscapeSize.height = UIScreen.main.bounds.height * 0.43
-                
-                viewWidth = landscapeSize.width
-                viewHeight = landscapeSize.height
-                
-                portraitSize.height = UIScreen.main.bounds.height * 0.32
-                portraitSize.width = UIScreen.main.bounds.height
-            }
-        }
-        
-        NSLog("UIScreen bounds \(UIScreen.main.bounds.width) x \(UIScreen.main.bounds.height)")
-        
-        NSLog("Portrait bounds \(portraitSize.width) x \(portraitSize.height)")
-        
-        NSLog("Landscape bounds \(landscapeSize.width) x \(landscapeSize.height)")
-    }
-    var count = 0
     
     // When changing orientation, change the keyboard height and width
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -117,18 +121,12 @@ class KeyboardViewController: UIInputViewController {
                 viewWidth = landscapeSize.width
             }
             
-            // Change the view width and height
             coordinator.animateAlongsideTransition(in: self.view, animation: {(_ context: UIViewControllerTransitionCoordinatorContext) -> Void in
                 self.renderKeys()
             }, completion: {(_ context: UIViewControllerTransitionCoordinatorContext) -> Void in
                 //Done animation
             })
         }
-    }
-    
-    // Check if the orientation has changed
-    func orientationChanged(now: CGSize, to: CGSize) -> Bool {
-        return  true
     }
     
     // Remove key from the sub view.
@@ -144,26 +142,62 @@ class KeyboardViewController: UIInputViewController {
         
         // Remove all of the existing keys before rendering
         self.removeAllSubView()
+        
         NSLog("Calling keyboard")
         keyboard = lisuKeyboardLayout(controller: self, viewWidth: viewWidth, viewHeight: viewHeight)
         NSLog("Called")
         
         // Add the keys to the View
-        for row in (keyboard?.keys)! {
+        for row in keyboard.keys[currPage]! {
             for key in row {
                 self.view.addSubview(key.button)
             }
         }
         
-        self.nextKeyboardButton = keyboard?.getChangeKyboardButton()
-        
-        self.nextKeyboardButton.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
+        // Add listeners to the keys
+        self.addEventListeners()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    // Add event listeners to the keys.
+    func addEventListeners() {
+        for row in keyboard.keys[currPage]! {
+            for key in row {
+                if key.isCharacter {
+                    // Characters to be typed
+                    key.button.addTarget(self, action: #selector(self.keyPressedOnce(sender:)), for: .touchUpInside)
+                } else if key.type == .keyboardChange {
+                    // Changing keyboard
+                    self.nextKeyboardButton = key.button
+                    self.nextKeyboardButton.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
+                } else if key.type == .shift {
+                    // Changing page for shift
+                    key.button.addTarget(self, action: #selector(self.shiftPressedOnce(sender:)), for: .touchUpInside)
+                } else if key.type == .modeChange {
+                    // Chaning to 123 page
+                    key.button.addTarget(self, action: #selector(self.modeChangePressedOnce(sender:)), for: .touchUpInside)
+                }
+            }
+        }
+    }
+    
+    // After shift is pressed toggle the view.
+    func shiftPressedOnce(sender: UIButton){
+        if currPage == "shift" {
+            currPage = "unshift"
+        } else {
+            currPage = "shift"
+        }
         self.renderKeys()
-        NSLog("Calling viewDidAppear")
+    }
+    
+    // 123 button is pressed
+    func modeChangePressedOnce(sender: UIButton){
+        if currPage == "abc" {
+            currPage = "123"
+        } else {
+            currPage = "abc"
+        }
+        self.renderKeys()
     }
     
     func backspaceLongPressed() {
@@ -180,7 +214,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func keyPressedOnce(sender: UIButton) {
-        textDocumentProxy.insertText(self.alphaCharacters[sender.tag])
+        textDocumentProxy.insertText((keyboard.keyHash[sender.tag]?.keyValue)!)
     }
     
     func makeButton(character: String, tag: Int) -> UIButton {

@@ -10,17 +10,13 @@ import Foundation
 import UIKit
 
 class Keyboard {
-    var keys: [[Key]] = []
     
-    // Get the keyboardChange button
-    func getChangeKyboardButton() -> UIButton? {
-        for row in keys {
-            for key in row{
-                if key.type == .keyboardChange {
-                    return key.button
-                }
-            }
-        }
-        return nil
-    }
+    // There are three pages unshift, shift, 123
+    var keys: [String:[[Key]]] = [:]
+    
+    // Each key is hashed with an ID. 
+    // This is to work around with the fact that Button
+    // addTarget can't send custom data. So, tag is
+    // used as an unique id for each key.
+    var keyHash : [Int:Key] = [:]
 }
