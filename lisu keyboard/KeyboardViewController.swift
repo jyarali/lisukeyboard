@@ -22,7 +22,10 @@ class KeyboardViewController: UIInputViewController {
     
     // viewWidth and viewHeight of the keyboard view
     var viewWidth: CGFloat = 0
-    var viewHeight: CGFloat = 0
+    var viewHeight: CGFloat = UIScreen.main.bounds.height / 3
+    
+    // Custom height for keyboard
+    var heightConstraint:NSLayoutConstraint? = nil
     
     var portraitSize: CGSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
     var landscapeSize: CGSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
@@ -33,7 +36,24 @@ class KeyboardViewController: UIInputViewController {
     override func updateViewConstraints() {
         super.updateViewConstraints()
         // Add custom view sizing constraints here
+        
+        // Change the view constraint
+        NSLog("Updating view constraint \(viewHeight)")
+        if heightConstraint == nil {
+            heightConstraint = NSLayoutConstraint(item: self.view,
+                                                  attribute: .height,
+                                                  relatedBy: .equal,
+                                                  toItem: nil,
+                                                  attribute: .notAnAttribute,
+                                                  multiplier: 1,
+                                                  constant: viewHeight)
+            heightConstraint?.priority = UILayoutPriority(UILayoutPriorityRequired)
+            self.view.addConstraint(heightConstraint!)
+        } else {
+            heightConstraint?.constant = viewHeight
+        }
     }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,14 +61,9 @@ class KeyboardViewController: UIInputViewController {
         // Determine the device
         let deviceType = UIDevice.current.userInterfaceIdiom
         
-        if deviceType == .phone {
-            // iPhone
-            // Portrait 375 x 216
-            // Width 100% Height 32%
-            
-            // Landscape 667 x 162
-            // Wdith 100% Height 43%
-            // Determine the orientation of the device initially
+        NSLog("DeviceType \(deviceType.rawValue)")
+        
+        if deviceType == .phone || deviceType == .pad {
             if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
                 // Portrait
                 portraitSize.height = UIScreen.main.bounds.height * 0.32
@@ -69,10 +84,13 @@ class KeyboardViewController: UIInputViewController {
                 portraitSize.height = UIScreen.main.bounds.height * 0.32
                 portraitSize.width = UIScreen.main.bounds.height
             }
-        } else {
-            // iPad
-    
         }
+        
+        NSLog("UIScreen bounds \(UIScreen.main.bounds.width) x \(UIScreen.main.bounds.height)")
+        
+        NSLog("Portrait bounds \(portraitSize.width) x \(portraitSize.height)")
+        
+        NSLog("Landscape bounds \(landscapeSize.width) x \(landscapeSize.height)")
     }
     var count = 0
     
@@ -88,6 +106,7 @@ class KeyboardViewController: UIInputViewController {
         NSLog("change orientation \(size.width) x  \(size.height)")
         
         if size.width != viewWidth {
+            
             isPortrait = !isPortrait
             
             if isPortrait {
