@@ -131,35 +131,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
         }
     }
     
-    // "꓿", "ꓹꓼ", "ꓱ", "ꓤ", "ꓕ", "ꓻ", "ꓵ", "꓾", "ˍ", "ꓒ"
-    // "ꓯ", "ꓸꓼ", "ꓷ", "ꓞ", "ꓨ", "ꓺ", "ꓩ", "ꓘ", "ꓶ"
-    // "ꓜ", "ꓫ", "ꓛ", "ꓥ", "ꓭ", "ꓠ", "-"
-    
     keyboard.keys["unshift"] = []
     keyboard.keys["unshift"]?.append(firstRowKeys)
     keyboard.keys["unshift"]?.append(secondRowKeys)
     keyboard.keys["unshift"]?.append(thirdRowKeys)
     keyboard.keys["unshift"]?.append(lastRowKeys)
     
-    // Generate uniqueID for each key.
-    // Starts from 1 because the button tag is default to 0.
-    var keyID = 1
-    
-    for row in keyboard.keys["unshift"]! {
-        for key in row {
-            key.button.tag = keyID
-            keyboard.keyHash[keyID] = key
-            keyID += 1
-        }
-    }
-    
     // Shift Page
-    
-    
-    // "꓿", "ꓹꓼ", "ꓱ", "ꓤ", "ꓕ", "ꓻ", "ꓵ", "꓾", "ˍ", "ꓒ"
-    // "ꓯ", "ꓸꓼ", "ꓷ", "ꓞ", "ꓨ", "ꓺ", "ꓩ", "ꓘ", "ꓶ"
-    // "ꓜ", "ꓫ", "ꓛ", "ꓥ", "ꓭ", "ꓠ", "-"
-    
     firstRow = ["꓿", "ꓹꓼ", "ꓱ", "ꓤ", "ꓕ", "ꓻ", "ꓵ", "꓾", "ˍ", "ꓒ"]
     firstRowKeys = []
     
@@ -264,15 +242,6 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     keyboard.keys["shift"]?.append(secondRowKeys)
     keyboard.keys["shift"]?.append(thirdRowKeys)
     keyboard.keys["shift"]?.append(lastRowKeys)
-    
-    // Generate uniqueID for each key.    
-    for row in keyboard.keys["shift"]! {
-        for key in row {
-            key.button.tag = keyID
-            keyboard.keyHash[keyID] = key
-            keyID += 1
-        }
-    }
     
     return keyboard
 }

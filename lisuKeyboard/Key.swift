@@ -33,11 +33,13 @@ class Key{
         self.type = type
         
         // This assign a parent view to the button
+        // This is need to set the constraints.
         parentView.addSubview(self.button)
         
         self.button.backgroundColor = UIColor.init(white: 1, alpha: 1)
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.black.cgColor
+        self.button.layer.borderWidth = 1
+        self.button.layer.borderColor = UIColor.black.cgColor
+        self.button.isHidden = true
         
         // Check if it's character or icon
         if keyIcon == nil {

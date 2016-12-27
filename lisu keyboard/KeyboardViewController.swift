@@ -36,17 +36,18 @@ class KeyboardViewController: UIInputViewController {
         self.setCustomWidthHeight()
         
         self.renderKeys()
+        
+        self.togglePageView(currPage: "", newPage: self.currPage)
     }
     
+    // Set keyboard custom height
     func setCustomWidthHeight(){
         
         // Determine the device
         let deviceType = UIDevice.current.userInterfaceIdiom
         
-        NSLog("DeviceType \(deviceType.rawValue)")
-        
         if deviceType == .phone || deviceType == .pad {
-            // Set the width and height based on the initial orientation.
+            // Set the width and height based on the initial orientation of the device.
             if isPortrait {
                 // Portrait
                 portraitSize.width = UIScreen.main.bounds.width
@@ -71,12 +72,6 @@ class KeyboardViewController: UIInputViewController {
                 portraitSize.width = UIScreen.main.bounds.height
             }
         }
-        
-        NSLog("UIScreen bounds \(UIScreen.main.bounds.width) x \(UIScreen.main.bounds.height)")
-        
-        NSLog("Portrait bounds \(portraitSize.width) x \(portraitSize.height)")
-        
-        NSLog("Landscape bounds \(landscapeSize.width) x \(landscapeSize.height)")
     }
     
     override func updateViewConstraints() {
@@ -106,9 +101,6 @@ class KeyboardViewController: UIInputViewController {
         // This is to prevent flipping landscapes. The device will rotate with the same width.
         // viewWidth != size.width
         
-        NSLog("change orientation \(viewWidth) x  \(viewHeight)")
-        NSLog("change orientation \(size.width) x  \(size.height)")
-        
         if size.width != viewWidth {
             
             isPortrait = !isPortrait
@@ -123,6 +115,8 @@ class KeyboardViewController: UIInputViewController {
             
             coordinator.animateAlongsideTransition(in: self.view, animation: {(_ context: UIViewControllerTransitionCoordinatorContext) -> Void in
                 self.renderKeys()
+                // Display the currPage
+                self.togglePageView(currPage: "", newPage: self.currPage)
             }, completion: {(_ context: UIViewControllerTransitionCoordinatorContext) -> Void in
                 //Done animation
             })
@@ -131,9 +125,31 @@ class KeyboardViewController: UIInputViewController {
     
     // Remove key from the sub view.
     func removeAllSubView() {
-        NSLog("Cleaning subviews")
         for v in self.view.subviews{
             v.removeFromSuperview()
+        }
+    }
+    
+    // Attempt to optimize stage change
+    // Toggle pages for the button
+    func togglePageView(currPage : String, newPage : String) {
+        
+        // Hide the current
+        if !currPage.isEmpty {
+            for row in keyboard.keys[currPage]! {
+                for key in row {
+                    key.button.isHidden = true
+                }
+            }
+        }
+        
+        // Show the next
+        if !newPage.isEmpty {
+            for row in keyboard.keys[newPage]! {
+                for key in row {
+                    key.button.isHidden = false
+                }
+            }
         }
     }
     
@@ -143,14 +159,15 @@ class KeyboardViewController: UIInputViewController {
         // Remove all of the existing keys before rendering
         self.removeAllSubView()
         
-        NSLog("Calling keyboard")
+        // Set up a keyboard with the custom width and height
         keyboard = lisuKeyboardLayout(controller: self, viewWidth: viewWidth, viewHeight: viewHeight)
-        NSLog("Called")
         
-        // Add the keys to the View
-        for row in keyboard.keys[currPage]! {
-            for key in row {
-                self.view.addSubview(key.button)
+        // Add all the keys to the View
+        for currKeyboard in keyboard.keys.values {
+            for row in currKeyboard {
+                for key in row {
+                    self.view.addSubview(key.button)
+                }
             }
         }
         
@@ -160,21 +177,27 @@ class KeyboardViewController: UIInputViewController {
     
     // Add event listeners to the keys.
     func addEventListeners() {
-        for row in keyboard.keys[currPage]! {
-            for key in row {
-                if key.isCharacter {
-                    // Characters to be typed
-                    key.button.addTarget(self, action: #selector(self.keyPressedOnce(sender:)), for: .touchUpInside)
-                } else if key.type == .keyboardChange {
-                    // Changing keyboard
-                    self.nextKeyboardButton = key.button
-                    self.nextKeyboardButton.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
-                } else if key.type == .shift {
-                    // Changing page for shift
-                    key.button.addTarget(self, action: #selector(self.shiftPressedOnce(sender:)), for: .touchUpInside)
-                } else if key.type == .modeChange {
-                    // Chaning to 123 page
-                    key.button.addTarget(self, action: #selector(self.modeChangePressedOnce(sender:)), for: .touchUpInside)
+        for currKeyboard in keyboard.keys.values {
+            for row in currKeyboard {
+                for key in row {
+                    if key.isCharacter {
+                        // Characters to be typed
+                        key.button.addTarget(self, action: #selector(self.keyPressedOnce(sender:)), for: .touchUpInside)
+                    } else if key.type == .keyboardChange {
+                        // Changing keyboard
+                        self.nextKeyboardButton = key.button
+                        self.nextKeyboardButton.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
+                    } else if key.type == .shift {
+                        // Changing page for shift
+                        key.button.addTarget(self, action: #selector(self.shiftPressedOnce(sender:)), for: .touchUpInside)
+                    } else if key.type == .modeChange {
+                        // Chaning to 123 page
+                        key.button.addTarget(self, action: #selector(self.modeChangePressedOnce(sender:)), for: .touchUpInside)
+                    } else if key.type == .backspace {
+                        // Chaning to 123 page
+                        key.button.addTarget(self, action: #selector(self.backspacePressedOnce(sender:)), for: .touchUpInside)
+                        key.button.addTarget(self, action: #selector(self.backspacePressedLong(sender:)), for: .touchDown)
+                    }
                 }
             }
         }
@@ -183,28 +206,31 @@ class KeyboardViewController: UIInputViewController {
     // After shift is pressed toggle the view.
     func shiftPressedOnce(sender: UIButton){
         if currPage == "shift" {
+            togglePageView(currPage: currPage, newPage: "unshift")
             currPage = "unshift"
         } else {
+            togglePageView(currPage: currPage, newPage: "shift")
             currPage = "shift"
         }
-        self.renderKeys()
     }
     
     // 123 button is pressed
     func modeChangePressedOnce(sender: UIButton){
         if currPage == "abc" {
+            togglePageView(currPage: currPage, newPage: "123")
             currPage = "123"
         } else {
+            togglePageView(currPage: currPage, newPage: "abc")
             currPage = "abc"
         }
-        self.renderKeys()
     }
     
-    func backspaceLongPressed() {
+    // Trigger for delete on hold and press once
+    func backspacePressedLong(sender: UIButton) {
         backspaceButtonTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(KeyboardViewController.backspaceDelete), userInfo: nil, repeats: true)
     }
     
-    func backspaceOnePressed() {
+    func backspacePressedOnce(sender: UIButton) {
         backspaceButtonTimer.invalidate()
         self.backspaceDelete()
     }
@@ -213,60 +239,10 @@ class KeyboardViewController: UIInputViewController {
         self.textDocumentProxy.deleteBackward()
     }
     
+    // Trigger for character key press.
     func keyPressedOnce(sender: UIButton) {
-        textDocumentProxy.insertText((keyboard.keyHash[sender.tag]?.keyValue)!)
+        textDocumentProxy.insertText((sender.titleLabel?.text)!)
     }
-    
-    func makeButton(character: String, tag: Int) -> UIButton {
-        
-        // Add backspace button
-        let backspaceKey = UIButton()
-        // Add next keyboard
-        backspaceKey.backgroundColor = UIColor.init(white: 1, alpha: 1)
-        
-        // Filter some keys
-        
-        backspaceKey.setTitle(character, for: [])
-        backspaceKey.setTitleColor(UIColor.darkGray, for: [])
-        backspaceKey.tag = tag
-        //backspaceKey.setImage(UIImage.fontAwesomeIcon(name: .windowCloseO, textColor: UIColor.black, size: CGSize(width: 30, height: 30)), for: [])
-        
-        backspaceKey.sizeToFit()
-        
-        //backspaceKey.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
-        backspaceKey.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        backspaceKey.translatesAutoresizingMaskIntoConstraints = false
-        
-        backspaceKey.addTarget(self, action: #selector(KeyboardViewController.keyPressedOnce), for: .touchUpInside)
-        //backspaceKey.addTarget(self, action: #selector(KeyboardViewController.backspaceLongPressed), for: .touchDown)
-    
-        return backspaceKey
-    }
-    
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        // Call the super class
-//        super.touchesBegan(touches, with: event)
-//        
-//        // Get user's touch
-//        let touch = touches.first
-//        // Get the coordinates of the touch
-//        let touchPoint = touch?.location(in: self.view)
-//        // Get the view (key) the touch is in
-//        let touchView = self.view.hitTest(touchPoint!, with: nil)
-//        // if key is backspace
-//        if touchView?.tag == 10 {
-//            // backspace one character and early return
-//            self.textDocumentProxy.deleteBackward()
-//            return
-//        }
-//        // Get the key's label
-//        let touchViewLabel = touchView?.subviews[0]
-//        // Downcast the label from UIView to UILabel so we can access the "text" property
-//        let touchViewLabelRaw = touchViewLabel as! UILabel
-//        // Insert the label's text into the text field
-//        textDocumentProxy.insertText(touchViewLabelRaw.text!)
-//    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
