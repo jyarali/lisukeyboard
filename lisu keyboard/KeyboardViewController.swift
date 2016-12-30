@@ -27,7 +27,7 @@ class KeyboardViewController: UIInputViewController {
     var isPortrait = UIScreen.main.bounds.height > UIScreen.main.bounds.width
     
     // Keyborard current page : unshift, shift, 123
-    var currPage = "unshift"
+    var currPage = MODE_CHANGE_ID.unshift
     var keyboard : Keyboard = Keyboard()
     
     override func viewDidLoad() {
@@ -37,7 +37,7 @@ class KeyboardViewController: UIInputViewController {
         
         self.renderKeys()
         
-        self.togglePageView(currPage: "", newPage: self.currPage)
+        self.togglePageView(currPage: 0, newPage: self.currPage)
     }
     
     // Set keyboard custom height
@@ -68,7 +68,7 @@ class KeyboardViewController: UIInputViewController {
                 viewHeight = landscapeSize.height
                 
                 // Portrait
-                portraitSize.height = UIScreen.main.bounds.height * 0.32
+                portraitSize.height = UIScreen.main.bounds.width * 0.32
                 portraitSize.width = UIScreen.main.bounds.height
             }
         }
@@ -116,7 +116,7 @@ class KeyboardViewController: UIInputViewController {
             coordinator.animateAlongsideTransition(in: self.view, animation: {(_ context: UIViewControllerTransitionCoordinatorContext) -> Void in
                 self.renderKeys()
                 // Display the currPage
-                self.togglePageView(currPage: "", newPage: self.currPage)
+                self.togglePageView(currPage: 0, newPage: self.currPage)
             }, completion: {(_ context: UIViewControllerTransitionCoordinatorContext) -> Void in
                 //Done animation
             })
@@ -127,29 +127,6 @@ class KeyboardViewController: UIInputViewController {
     func removeAllSubView() {
         for v in self.view.subviews{
             v.removeFromSuperview()
-        }
-    }
-    
-    // Attempt to optimize stage change
-    // Toggle pages for the button
-    func togglePageView(currPage : String, newPage : String) {
-        
-        // Hide the current
-        if !currPage.isEmpty {
-            for row in keyboard.keys[currPage]! {
-                for key in row {
-                    key.button.isHidden = true
-                }
-            }
-        }
-        
-        // Show the next
-        if !newPage.isEmpty {
-            for row in keyboard.keys[newPage]! {
-                for key in row {
-                    key.button.isHidden = false
-                }
-            }
         }
     }
     
@@ -187,42 +164,58 @@ class KeyboardViewController: UIInputViewController {
                         // Changing keyboard
                         self.nextKeyboardButton = key.button
                         self.nextKeyboardButton.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
-                    } else if key.type == .shift {
-                        // Changing page for shift
-                        key.button.addTarget(self, action: #selector(self.shiftPressedOnce(sender:)), for: .touchUpInside)
                     } else if key.type == .modeChange {
-                        // Chaning to 123 page
+                        // Chaning modes
                         key.button.addTarget(self, action: #selector(self.modeChangePressedOnce(sender:)), for: .touchUpInside)
                     } else if key.type == .backspace {
-                        // Chaning to 123 page
+                        // Deleting characters
                         key.button.addTarget(self, action: #selector(self.backspacePressedOnce(sender:)), for: .touchUpInside)
                         key.button.addTarget(self, action: #selector(self.backspacePressedLong(sender:)), for: .touchDown)
+                    } else if key.type == .enter {
+                        // Enter(Return) key
+                        // Update the key value based on the returnType
+                        key.button.addTarget(self, action: #selector(self.returnPressedOnce(sender:)), for: .touchUpInside)
                     }
                 }
             }
         }
     }
     
-    // After shift is pressed toggle the view.
-    func shiftPressedOnce(sender: UIButton){
-        if currPage == "shift" {
-            togglePageView(currPage: currPage, newPage: "unshift")
-            currPage = "unshift"
-        } else {
-            togglePageView(currPage: currPage, newPage: "shift")
-            currPage = "shift"
-        }
+    // Return button is pressed.
+    func returnPressedOnce(sender: UIButton) {
+        self.textDocumentProxy.insertText("\n")
     }
     
-    // 123 button is pressed
+    // Mode change is pressed.
     func modeChangePressedOnce(sender: UIButton){
-        if currPage == "abc" {
-            togglePageView(currPage: currPage, newPage: "123")
-            currPage = "123"
-        } else {
-            togglePageView(currPage: currPage, newPage: "abc")
-            currPage = "abc"
+        NSLog("Changed to \(sender.tag)")
+        togglePageView(currPage: currPage, newPage: sender.tag)
+    }
+    
+    // Attempt to optimize stage change
+    // Toggle pages for the button
+    func togglePageView(currPage : Int, newPage : Int) {
+        
+        // Hide the current
+        if currPage != 0 {
+            for row in keyboard.keys[currPage]! {
+                for key in row {
+                    key.button.isHidden = true
+                }
+            }
         }
+        
+        // Show the next
+        if newPage != 0 {
+            for row in keyboard.keys[newPage]! {
+                for key in row {
+                    key.button.isHidden = false
+                }
+            }
+        }
+        
+        // Update the currPage
+        self.currPage = newPage
     }
     
     // Trigger for delete on hold and press once

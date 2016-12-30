@@ -10,11 +10,12 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    @IBOutlet weak var inputField: UITextField!
+    @IBOutlet weak var textBox: UITextView!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.inputField.becomeFirstResponder()
+        
+        self.textBox.becomeFirstResponder()
     }
 
     override func didReceiveMemoryWarning() {

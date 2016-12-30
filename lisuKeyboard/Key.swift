@@ -19,18 +19,38 @@ class Key{
         case keyboardChange
         case period
         case space
+        case num
+        case sym
         case enter
         case settings
         case other
     }
     
     var type: KeyType
-    var toMode: Int? //If the key is a mode button, this idnicates which page it links to
-    var keyValue: String?
+    var keyValue: String
     var button = UIButton()
+    var width: CGFloat = 0.0
+    var height: CGFloat = 0.0
+    var color = UIColor()
+    var parentView = UIView()
+    var tag: Int = 0 // Tag is 0 by default
     
-    init(type: KeyType, keyValue: String? = nil , keyIcon: FontAwesome? = nil , controlState: UIControlState? = nil, width: CGFloat, height: CGFloat, color:UIColor, parentView: UIView) {
+    init() {
+        // Place holder
+        self.type = KeyType.character
+        self.keyValue = ""
+    }
+    
+    init(type: KeyType, keyValue: String , width: CGFloat, height: CGFloat, color:UIColor, parentView: UIView, tag: Int? = nil) {
         self.type = type
+        self.width = width
+        self.height = height
+        self.color = color
+        self.parentView = parentView
+        
+        if tag != nil {
+            self.tag = tag!
+        }
         
         // This assign a parent view to the button
         // This is need to set the constraints.
@@ -40,16 +60,12 @@ class Key{
         self.button.layer.borderWidth = 1
         self.button.layer.borderColor = UIColor.black.cgColor
         self.button.isHidden = true
+        self.button.tag = self.tag
         
-        // Check if it's character or icon
-        if keyIcon == nil {
-            self.keyValue = keyValue
-            self.button.setTitle(self.keyValue, for: [])
-            self.button.setTitleColor(color, for: [])
-        } else {
-            self.button.setImage(UIImage.fontAwesomeIcon(name: keyIcon!, textColor: color, size: CGSize(width: width,  height: height)), for: controlState!)
-        }
-        
+        self.keyValue = keyValue
+        self.button.setTitle(self.keyValue, for: [])
+        self.button.setTitleColor(color, for: [])
+    
         self.button.sizeToFit()
         
         self.button.widthAnchor.constraint(equalToConstant: width).isActive = true
@@ -57,6 +73,11 @@ class Key{
         
         self.button.translatesAutoresizingMaskIntoConstraints = false
         
+    }
+    
+    func copy(keyValue: String? = nil, width: CGFloat? = nil, height: CGFloat? = nil, color: UIColor? = nil) -> Key{
+        let copyObj = Key(type: self.type, keyValue: (keyValue != nil ? keyValue! : self.keyValue), width: (width != nil ? width! : self.width), height: (height != nil ? height! : self.height), color: (color != nil ? color! : self.color), parentView: self.parentView, tag: self.tag)
+        return copyObj
     }
     
     var isCharacter: Bool {

@@ -73,6 +73,8 @@
 		FC471CA21E0CB85800D80209 /* keyBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = keyBoard.swift; sourceTree = "<group>"; };
 		FC471CA51E0CB8F400D80209 /* lisuKeyboardLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = lisuKeyboardLayout.swift; sourceTree = "<group>"; };
 		FC471CAB1E0CBB4800D80209 /* Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
+		FCD8C96A1E12EF3D0067F9C1 /* lisuKeyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = lisuKeyboard.entitlements; sourceTree = "<group>"; };
+		FCD8C96B1E12EF450067F9C1 /* lisu keyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "lisu keyboard.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 		FC471C651E0A4EDE00D80209 /* lisuKeyboard */ = {
 			isa = PBXGroup;
 			children = (
+				FCD8C96A1E12EF3D0067F9C1 /* lisuKeyboard.entitlements */,
 				FC471C661E0A4EDE00D80209 /* AppDelegate.swift */,
 				FC471C681E0A4EDE00D80209 /* ViewController.swift */,
 				FC471C6A1E0A4EDE00D80209 /* Main.storyboard */,
@@ -129,6 +132,7 @@
 		FC471C7D1E0B08A500D80209 /* lisu keyboard */ = {
 			isa = PBXGroup;
 			children = (
+				FCD8C96B1E12EF450067F9C1 /* lisu keyboard.entitlements */,
 				FC471C7E1E0B08A500D80209 /* KeyboardViewController.swift */,
 				FC471C801E0B08A500D80209 /* Info.plist */,
 				FC471CA51E0CB8F400D80209 /* lisuKeyboardLayout.swift */,
@@ -211,11 +215,21 @@
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = 2T23QSAHDC;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					FC471C7B1E0B08A500D80209 = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = 2T23QSAHDC;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -418,6 +432,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = lisuKeyboard/lisuKeyboard.entitlements;
 				DEVELOPMENT_TEAM = 2T23QSAHDC;
 				INFOPLIST_FILE = lisuKeyboard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -433,6 +448,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = lisuKeyboard/lisuKeyboard.entitlements;
 				DEVELOPMENT_TEAM = 2T23QSAHDC;
 				INFOPLIST_FILE = lisuKeyboard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -446,6 +462,7 @@
 		FC471C851E0B08A500D80209 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "lisu keyboard/lisu keyboard.entitlements";
 				DEVELOPMENT_TEAM = 2T23QSAHDC;
 				INFOPLIST_FILE = "lisu keyboard/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -460,6 +477,7 @@
 		FC471C861E0B08A500D80209 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "lisu keyboard/lisu keyboard.entitlements";
 				DEVELOPMENT_TEAM = 2T23QSAHDC;
 				INFOPLIST_FILE = "lisu keyboard/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
