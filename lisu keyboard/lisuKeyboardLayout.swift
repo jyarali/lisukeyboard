@@ -28,6 +28,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
         static let ABC = "ABC"
     }
     
+    struct MODE_CHANGE_ID {
+        static let unshift = 1
+        static let shift = 2
+        static let sym = 3
+        static let num = 4
+    }
+    
     var keyboardLayout : [Int: page] = [:]
     // Unshift
     var unshiftPage = page()
