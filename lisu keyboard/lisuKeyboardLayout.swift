@@ -13,7 +13,7 @@ struct page {
     var keyboard : [[String]] = []
 }
 
-func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, viewHeight: CGFloat) -> Keyboard {
+func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, viewHeight: CGFloat, isPortrait: Bool) -> Keyboard {
     
     
     // Just to save myself from typos
@@ -68,11 +68,22 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
                         ["ABC","keyboardchange", "space", "•", "return"]
     ]
     keyboardLayout[MODE_CHANGE_ID.sym] = symPage
-
+    
+    // Padding for the buttons
+    var GAP_WIDTH: CGFloat = 0.012 * viewWidth // 1.2% of the whole width
+    if !isPortrait {
+        GAP_WIDTH = 0.008 * viewWidth
+    }
+    let GAP_HEIGHT: CGFloat = GAP_WIDTH
+    
+    let MAX_NUM_GAP_HOR: CGFloat = 11
+    let MAX_NUM_GAP_VER: CGFloat = 5
+    
     // Determine button width
-    // The total size of all buttons must be < viewWidth and < viewHeight
-    let characterSize = CGSize(width: viewWidth/10, height: viewHeight/4)
-    let shiftDeleteSize = CGSize(width: (viewWidth - (characterSize.width * 7))/2, height: characterSize.height )
+    // So many magic numbers... :<<<
+    let characterSize = CGSize(width: (viewWidth-(GAP_WIDTH * MAX_NUM_GAP_HOR))/10, height: (viewHeight - (GAP_HEIGHT * MAX_NUM_GAP_VER))/4)
+    let shiftDeleteSize = CGSize(width: (viewWidth - characterSize.width * 7 - GAP_WIDTH * 10)/2, height: characterSize.height )
+    let spacebarSize = CGSize(width: (characterSize.width * 6 + GAP_WIDTH * 5), height: characterSize.height)
     
     // Icons
     let changeKeyboardIcon = "\u{0001F310}"
@@ -112,12 +123,12 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     }
     // Add constraints for first row
     for (i,_) in firstRowKeys.enumerated() {
-        firstRowKeys[i].button.topAnchor.constraint(equalTo: controller.view.topAnchor).isActive = true
+        firstRowKeys[i].button.topAnchor.constraint(equalTo: controller.view.topAnchor, constant: GAP_HEIGHT).isActive = true
         // Top left
         if i == 0 {
-            firstRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor).isActive = true
+            firstRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: GAP_WIDTH).isActive = true
         } else {
-            firstRowKeys[i].button.leftAnchor.constraint(equalTo: firstRowKeys[i-1].button.rightAnchor).isActive = true
+            firstRowKeys[i].button.leftAnchor.constraint(equalTo: firstRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -131,16 +142,17 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     }
     // Add Padding before Second Row
     // Padding left
-    let paddingLeft = (viewWidth - (characterSize.width * CGFloat((secondRow?.count)!)))/2
+    let secondRowGapCount = secondRowKeys.count - 1
+    let paddingLeft = (viewWidth - characterSize.width * CGFloat((secondRow?.count)!) - GAP_WIDTH * CGFloat(secondRowGapCount))/2
     // Add constraints for second row
     for (i,_) in secondRowKeys.enumerated() {
-        secondRowKeys[i].button.topAnchor.constraint(equalTo: firstRowKeys[0].button.bottomAnchor).isActive = true
+        secondRowKeys[i].button.topAnchor.constraint(equalTo: firstRowKeys[0].button.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
-        // Top left
+        // Leftmostkey
         if i == 0 {
             secondRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: paddingLeft).isActive = true
         } else {
-            secondRowKeys[i].button.leftAnchor.constraint(equalTo: secondRowKeys[i-1].button.rightAnchor).isActive = true
+            secondRowKeys[i].button.leftAnchor.constraint(equalTo: secondRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -163,12 +175,12 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     }
     // Add constraints for third row
     for (i,_) in thirdRowKeys.enumerated() {
-        thirdRowKeys[i].button.topAnchor.constraint(equalTo: secondRowKeys[0].button.bottomAnchor).isActive = true
+        thirdRowKeys[i].button.topAnchor.constraint(equalTo: secondRowKeys[0].button.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         // Left
         if i == 0 {
-             thirdRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor).isActive = true
+            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: GAP_WIDTH).isActive = true
         } else {
-            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: thirdRowKeys[i-1].button.rightAnchor).isActive = true
+            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: thirdRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -179,20 +191,20 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     // Change keyboard button
     lastRowKeys.append(changeKeyboardKey.copy())
     // Spacebar button
-    lastRowKeys.append(charKey.copy(keyValue: " ", width: characterSize.width * 6))
+    lastRowKeys.append(charKey.copy(keyValue: " ", width: spacebarSize.width))
     // Period button
     lastRowKeys.append(charKey.copy(keyValue: "꓿"))
     // Return button
     lastRowKeys.append(enterKey.copy())
     // Add constraints for Last row
     for (i,_) in lastRowKeys.enumerated() {
-        lastRowKeys[i].button.topAnchor.constraint(equalTo: thirdRowKeys[0].button.bottomAnchor).isActive = true
+        lastRowKeys[i].button.topAnchor.constraint(equalTo: thirdRowKeys[0].button.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Top left
         if i == 0 {
-            lastRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor).isActive = true
+            lastRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: GAP_WIDTH).isActive = true
         } else {
-            lastRowKeys[i].button.leftAnchor.constraint(equalTo: lastRowKeys[i-1].button.rightAnchor).isActive = true
+            lastRowKeys[i].button.leftAnchor.constraint(equalTo: lastRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -216,13 +228,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     }
     // Add constraints for first row
     for (i,_) in firstRowKeys.enumerated() {
-        firstRowKeys[i].button.topAnchor.constraint(equalTo: controller.view.topAnchor).isActive = true
+        firstRowKeys[i].button.topAnchor.constraint(equalTo: controller.view.topAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Top left
         if i == 0 {
-            firstRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor).isActive = true
+            firstRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: GAP_WIDTH).isActive = true
         } else {
-            firstRowKeys[i].button.leftAnchor.constraint(equalTo: firstRowKeys[i-1].button.rightAnchor).isActive = true
+            firstRowKeys[i].button.leftAnchor.constraint(equalTo: firstRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -236,13 +248,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     }
     // Add constraints for second row
     for (i,_) in secondRowKeys.enumerated() {
-        secondRowKeys[i].button.topAnchor.constraint(equalTo: firstRowKeys[0].button.bottomAnchor).isActive = true
+        secondRowKeys[i].button.topAnchor.constraint(equalTo: firstRowKeys[0].button.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Top left
         if i == 0 {
             secondRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: paddingLeft).isActive = true
         } else {
-            secondRowKeys[i].button.leftAnchor.constraint(equalTo: secondRowKeys[i-1].button.rightAnchor).isActive = true
+            secondRowKeys[i].button.leftAnchor.constraint(equalTo: secondRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -260,13 +272,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     thirdRowKeys.append(backspaceKey.copy())
     // Add constraints for third row
     for (i,_) in thirdRowKeys.enumerated() {
-        thirdRowKeys[i].button.topAnchor.constraint(equalTo: secondRowKeys[0].button.bottomAnchor).isActive = true
+        thirdRowKeys[i].button.topAnchor.constraint(equalTo: secondRowKeys[0].button.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Left
         if i == 0 {
-            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor).isActive = true
+            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: GAP_WIDTH).isActive = true
         } else {
-            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: thirdRowKeys[i-1].button.rightAnchor).isActive = true
+            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: thirdRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -277,7 +289,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     // Change keyboard button
     lastRowKeys.append(changeKeyboardKey.copy())
     // Spacebar button
-    lastRowKeys.append(charKey.copy(keyValue: " ", width: characterSize.width * 6))
+    lastRowKeys.append(charKey.copy(keyValue: " ", width: spacebarSize.width))
     // Period button
     lastRowKeys.append(charKey.copy(keyValue: "?"))
     // Return button
@@ -285,13 +297,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     
     // Add constraints for third row
     for (i,_) in lastRowKeys.enumerated() {
-        lastRowKeys[i].button.topAnchor.constraint(equalTo: thirdRowKeys[0].button.bottomAnchor).isActive = true
+        lastRowKeys[i].button.topAnchor.constraint(equalTo: thirdRowKeys[0].button.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Top left
         if i == 0 {
-            lastRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor).isActive = true
+            lastRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: GAP_WIDTH).isActive = true
         } else {
-            lastRowKeys[i].button.leftAnchor.constraint(equalTo: lastRowKeys[i-1].button.rightAnchor).isActive = true
+            lastRowKeys[i].button.leftAnchor.constraint(equalTo: lastRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -312,13 +324,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     }
     // Add constraints for first row
     for (i,_) in firstRowKeys.enumerated() {
-        firstRowKeys[i].button.topAnchor.constraint(equalTo: controller.view.topAnchor).isActive = true
+        firstRowKeys[i].button.topAnchor.constraint(equalTo: controller.view.topAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Top left
         if i == 0 {
-            firstRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor).isActive = true
+            firstRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: GAP_WIDTH).isActive = true
         } else {
-            firstRowKeys[i].button.leftAnchor.constraint(equalTo: firstRowKeys[i-1].button.rightAnchor).isActive = true
+            firstRowKeys[i].button.leftAnchor.constraint(equalTo: firstRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -332,13 +344,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     }
     // Add constraints for second row
     for (i,_) in secondRowKeys.enumerated() {
-        secondRowKeys[i].button.topAnchor.constraint(equalTo: firstRowKeys[0].button.bottomAnchor).isActive = true
+        secondRowKeys[i].button.topAnchor.constraint(equalTo: firstRowKeys[0].button.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
-        // Top left
+        // Second row padding
         if i == 0 {
             secondRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: paddingLeft).isActive = true
         } else {
-            secondRowKeys[i].button.leftAnchor.constraint(equalTo: secondRowKeys[i-1].button.rightAnchor).isActive = true
+            secondRowKeys[i].button.leftAnchor.constraint(equalTo: secondRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
 //    
@@ -356,13 +368,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     thirdRowKeys.append(backspaceKey.copy())
     // Add constraints for third row
     for (i,_) in thirdRowKeys.enumerated() {
-        thirdRowKeys[i].button.topAnchor.constraint(equalTo: secondRowKeys[0].button.bottomAnchor).isActive = true
+        thirdRowKeys[i].button.topAnchor.constraint(equalTo: secondRowKeys[0].button.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Left
         if i == 0 {
-            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor).isActive = true
+            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: GAP_WIDTH).isActive = true
         } else {
-            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: thirdRowKeys[i-1].button.rightAnchor).isActive = true
+            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: thirdRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -373,7 +385,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     // Change keyboard button
     lastRowKeys.append(changeKeyboardKey.copy())
     // Spacebar button
-    lastRowKeys.append(charKey.copy(keyValue: " ", width: characterSize.width * 6))
+    lastRowKeys.append(charKey.copy(keyValue: " ", width: spacebarSize.width))
     // Comma button
     lastRowKeys.append(charKey.copy(keyValue: ","))
     // Return button
@@ -381,13 +393,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     
     // Add constraints for third row
     for (i,_) in lastRowKeys.enumerated() {
-        lastRowKeys[i].button.topAnchor.constraint(equalTo: thirdRowKeys[0].button.bottomAnchor).isActive = true
+        lastRowKeys[i].button.topAnchor.constraint(equalTo: thirdRowKeys[0].button.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Top left
         if i == 0 {
-            lastRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor).isActive = true
+            lastRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: GAP_WIDTH).isActive = true
         } else {
-            lastRowKeys[i].button.leftAnchor.constraint(equalTo: lastRowKeys[i-1].button.rightAnchor).isActive = true
+            lastRowKeys[i].button.leftAnchor.constraint(equalTo: lastRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -409,13 +421,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     }
     // Add constraints for first row
     for (i,_) in firstRowKeys.enumerated() {
-        firstRowKeys[i].button.topAnchor.constraint(equalTo: controller.view.topAnchor).isActive = true
+        firstRowKeys[i].button.topAnchor.constraint(equalTo: controller.view.topAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Top left
         if i == 0 {
-            firstRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor).isActive = true
+            firstRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: GAP_WIDTH).isActive = true
         } else {
-            firstRowKeys[i].button.leftAnchor.constraint(equalTo: firstRowKeys[i-1].button.rightAnchor).isActive = true
+            firstRowKeys[i].button.leftAnchor.constraint(equalTo: firstRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -429,13 +441,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     }
     // Add constraints for second row
     for (i,_) in secondRowKeys.enumerated() {
-        secondRowKeys[i].button.topAnchor.constraint(equalTo: firstRowKeys[0].button.bottomAnchor).isActive = true
+        secondRowKeys[i].button.topAnchor.constraint(equalTo: firstRowKeys[0].button.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Top left
         if i == 0 {
             secondRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: paddingLeft).isActive = true
         } else {
-            secondRowKeys[i].button.leftAnchor.constraint(equalTo: secondRowKeys[i-1].button.rightAnchor).isActive = true
+            secondRowKeys[i].button.leftAnchor.constraint(equalTo: secondRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -453,13 +465,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     thirdRowKeys.append(backspaceKey.copy())
     // Add constraints for third row.
     for (i,_) in thirdRowKeys.enumerated() {
-        thirdRowKeys[i].button.topAnchor.constraint(equalTo: secondRowKeys[0].button.bottomAnchor).isActive = true
+        thirdRowKeys[i].button.topAnchor.constraint(equalTo: secondRowKeys[0].button.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Left
         if i == 0 {
-            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor).isActive = true
+            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: GAP_WIDTH).isActive = true
         } else {
-            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: thirdRowKeys[i-1].button.rightAnchor).isActive = true
+            thirdRowKeys[i].button.leftAnchor.constraint(equalTo: thirdRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -470,20 +482,20 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     // Change keyboard button
     lastRowKeys.append(changeKeyboardKey.copy())
     // Spacebar button
-    lastRowKeys.append(charKey.copy(keyValue: " ", width: characterSize.width * 6))
+    lastRowKeys.append(charKey.copy(keyValue: " ", width: spacebarSize.width))
     // BulletPoint button
     lastRowKeys.append(charKey.copy(keyValue: "•"))
     // Return button
     lastRowKeys.append(enterKey.copy())
     // Add constraints for Last row
     for (i,_) in lastRowKeys.enumerated() {
-        lastRowKeys[i].button.topAnchor.constraint(equalTo: thirdRowKeys[0].button.bottomAnchor).isActive = true
+        lastRowKeys[i].button.topAnchor.constraint(equalTo: thirdRowKeys[0].button.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Top left
         if i == 0 {
-            lastRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor).isActive = true
+            lastRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: GAP_WIDTH).isActive = true
         } else {
-            lastRowKeys[i].button.leftAnchor.constraint(equalTo: lastRowKeys[i-1].button.rightAnchor).isActive = true
+            lastRowKeys[i].button.leftAnchor.constraint(equalTo: lastRowKeys[i-1].button.rightAnchor, constant: GAP_WIDTH).isActive = true
         }
     }
     
@@ -491,6 +503,6 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     keyboard.keys[MODE_CHANGE_ID.sym]?.append(secondRowKeys)
     keyboard.keys[MODE_CHANGE_ID.sym]?.append(thirdRowKeys)
     keyboard.keys[MODE_CHANGE_ID.sym]?.append(lastRowKeys)
-    
+        
     return keyboard
 }

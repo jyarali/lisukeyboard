@@ -30,6 +30,9 @@ class KeyboardViewController: UIInputViewController {
     var currPage = MODE_CHANGE_ID.unshift
     var keyboard : Keyboard = Keyboard()
     
+    // Current popup view
+    var currPopup : [UIView] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -137,7 +140,7 @@ class KeyboardViewController: UIInputViewController {
         self.removeAllSubView()
         
         // Set up a keyboard with the custom width and height
-        keyboard = lisuKeyboardLayout(controller: self, viewWidth: viewWidth, viewHeight: viewHeight)
+        keyboard = lisuKeyboardLayout(controller: self, viewWidth: self.viewWidth, viewHeight: self.viewHeight, isPortrait: self.isPortrait)
         
         // Add all the keys to the View
         for currKeyboard in keyboard.keys.values {
@@ -160,6 +163,7 @@ class KeyboardViewController: UIInputViewController {
                     if key.isCharacter {
                         // Characters to be typed
                         key.button.addTarget(self, action: #selector(self.keyPressedOnce(sender:)), for: .touchUpInside)
+                        key.button.addTarget(self, action: #selector(self.keyPressedHold(sender:)), for: .touchDown)
                     } else if key.type == .keyboardChange {
                         // Changing keyboard
                         self.nextKeyboardButton = key.button
@@ -232,9 +236,65 @@ class KeyboardViewController: UIInputViewController {
         self.textDocumentProxy.deleteBackward()
     }
     
+    func keyPressedHold(sender: UIButton){
+        NSLog("holding")
+        self.showKeyPopUp(sender: sender)
+    }
+    
     // Trigger for character key press.
     func keyPressedOnce(sender: UIButton) {
+        // Remove the popup
+        self.removePopUpKeys()
+        
+        NSLog("pressed \(sender.titleLabel?.text)")
+        //self.showKeyPopUp(sender: sender)
         textDocumentProxy.insertText((sender.titleLabel?.text)!)
+        
+        // Return to unshift page if the currPage is shift.
+        if currPage == MODE_CHANGE_ID.shift {
+            togglePageView(currPage: self.currPage, newPage: MODE_CHANGE_ID.unshift)
+        }
+        
+    }
+    
+    // Remove the pressed Views
+    func removePopUpKeys() {
+        for view in currPopup {
+            view.removeFromSuperview()
+        }
+    }
+    
+    func showKeyPopUp(sender: UIButton){
+        let customView = UIView()
+        let keyLabel = UILabel()
+        
+        customView.tag = sender.tag
+        customView.addSubview(keyLabel)
+        
+        keyLabel.widthAnchor.constraint(equalToConstant: sender.frame.size.width).isActive = true
+        keyLabel.heightAnchor.constraint(equalToConstant: sender.frame.size.height).isActive = true
+        keyLabel.centerXAnchor.constraint(equalTo: customView.centerXAnchor).isActive = true
+        keyLabel.centerYAnchor.constraint(equalTo: customView.centerYAnchor).isActive = true
+        
+        keyLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        keyLabel.textAlignment = NSTextAlignment.center
+        keyLabel.text = (sender.titleLabel?.text)!
+        
+        customView.sizeToFit()
+        
+        customView.backgroundColor = UIColor.white
+        
+        self.view.addSubview(customView)
+        
+        customView.widthAnchor.constraint(equalToConstant: sender.frame.size.width).isActive = true
+        customView.heightAnchor.constraint(equalToConstant: sender.frame.size.height).isActive = true
+        customView.translatesAutoresizingMaskIntoConstraints = false
+        
+        customView.bottomAnchor.constraint(equalTo: sender.topAnchor).isActive = true
+        customView.leftAnchor.constraint(equalTo: sender.leftAnchor).isActive = true
+        
+        currPopup.append(customView)
     }
     
     override func didReceiveMemoryWarning() {

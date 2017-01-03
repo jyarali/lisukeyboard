@@ -57,17 +57,20 @@ class Key{
         parentView.addSubview(self.button)
         
         self.button.backgroundColor = UIColor.init(white: 1, alpha: 1)
-        self.button.layer.borderWidth = 1
-        self.button.layer.borderColor = UIColor.black.cgColor
+        self.button.layer.borderColor = UIColor.darkGray.cgColor
         self.button.isHidden = true
         self.button.tag = self.tag
         
+        // Button styling
         self.keyValue = keyValue
         self.button.setTitle(self.keyValue, for: [])
         self.button.setTitleColor(color, for: [])
-    
+        
+        self.button.layer.cornerRadius = 5
+        
         self.button.sizeToFit()
         
+        // Button Constraint
         self.button.widthAnchor.constraint(equalToConstant: width).isActive = true
         self.button.heightAnchor.constraint(equalToConstant: height).isActive = true
         
