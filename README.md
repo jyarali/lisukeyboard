@@ -9,7 +9,7 @@ Custom iOS Keyboard for Lisu Language using Swift.
 I would be very grateful if you are willing to contribute to this project. There are a lot of optimizations to be done.Then, feel free to modify and create your own custom keyboard using this. I just would like to request for credit should you have created a new keyboard based on this repo.
 
 # To Do
--Style popup button
--Add an extra bar on the top for iPhones so then, the popup will display.
--Create a settingpage/appinfo for the actual app.
--Add Sound
+- Style popup button
+- Add an extra bar on the top for iPhones so then, the popup will display.
+- Create a settingpage/appinfo for the actual app.
+- Add Sound
