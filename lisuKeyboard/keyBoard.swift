@@ -9,6 +9,11 @@
 import Foundation
 import UIKit
 
+
+// TODO :: There is a linker problem in lisuKeyboardLayoutout global function.
+// The build error indicates that this global struct cannot be linked to
+// the gloal function.
+
 struct MODE_CHANGE_ID {
     static let unshift = 1
     static let shift = 2
@@ -16,7 +21,19 @@ struct MODE_CHANGE_ID {
     static let num = 4
 }
 
+// Colors
+struct theme {
+    static let keyPressedColor : UIColor = UIColor(red:0.73, green:0.73, blue:0.73, alpha:1.0)
+    static let keyboardBackgroundColor : UIColor = UIColor(red:0.85, green:0.86, blue:0.86, alpha:1.0)
+    static let keyBackgroundColor : UIColor = UIColor.white
+    static let keyBorderColor : UIColor = UIColor.darkGray
+    static let keyShadowColor : UIColor = UIColor(red:0.80, green:0.80, blue:0.80, alpha:1.0)
+    static let keyColor : UIColor = UIColor.darkGray
+    static let specialKeyBackgroundColor : UIColor = UIColor(red:0.77, green:0.80, blue:0.81, alpha:1.0)
+    static let specialKeyShadowColor : UIColor = UIColor(red:0.63, green:0.65, blue:0.66, alpha:0.6)
+}
+
 class Keyboard {
-    // There are three pages unshift, shift, 123
+    // There are four pages unshift, shift, number , and symbols
     var keys: [Int:[[Key]]] = [:]
 }

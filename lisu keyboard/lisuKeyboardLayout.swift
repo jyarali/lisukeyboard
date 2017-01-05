@@ -13,8 +13,20 @@ struct page {
     var keyboard : [[String]] = []
 }
 
-func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, viewHeight: CGFloat, isPortrait: Bool) -> Keyboard {
+func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, totalHeight: CGFloat, isPortrait: Bool, isIPad: Bool) -> Keyboard {
     
+    let viewWidth = totalWidth
+    let viewHeight = isIPad ? totalHeight : totalHeight / 1.15
+    let barHeight = isIPad ? 0 : totalHeight * 0.15
+    
+    // NEED AN EXTRA BAR ON THE TOP FOR THE POPUP. ONLY FOR iPHONES
+    let topBar = UIView()
+    controller.view.addSubview(topBar)
+    topBar.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
+    topBar.heightAnchor.constraint(equalToConstant: barHeight).isActive = true
+    topBar.topAnchor.constraint(equalTo: controller.view.topAnchor).isActive = true
+    topBar.translatesAutoresizingMaskIntoConstraints = false
+    topBar.backgroundColor = theme.keyboardBackgroundColor
     
     // Just to save myself from typos
     struct specialKey {
@@ -28,27 +40,23 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
         static let ABC = "ABC"
     }
     
-    struct MODE_CHANGE_ID {
-        static let unshift = 1
-        static let shift = 2
-        static let sym = 3
-        static let num = 4
-    }
+    // NOTE :: You cannot just simply replace the following chart.
+    // Needs more work to be programmatic. More like a reference.
     
     var keyboardLayout : [Int: page] = [:]
     // Unshift
     var unshiftPage = page()
-    unshiftPage.keyboard = [["ʼ", "ꓪ", "ꓰ", "ꓣ", "ꓔ", "ꓬ", "ꓴ", "ꓲ", "ꓳ", "ꓑ"],
+    unshiftPage.keyboard = [["'", "ꓪ", "ꓰ", "ꓣ", "ꓔ", "ꓬ", "ꓴ", "ꓲ", "ꓳ", "ꓑ"],
                             ["ꓮ", "ꓢ", "ꓓ", "ꓝ", "ꓖ", "ꓧ", "ꓙ", "ꓗ", "ꓡ"],
                             ["shift","ꓜ", "ꓫ", "ꓚ", "ꓦ", "ꓐ", "ꓠ", "ꓟ","backspace"],
-                            ["123","keyboardchange", "space","=", "return"]
+                            ["123","keyboardchange", "space",".", "return"]
     ]
     keyboardLayout[MODE_CHANGE_ID.unshift] = unshiftPage
     // Shift
     var shiftPage = page()
     shiftPage.keyboard = [["\"", "ꓼ", "ꓱ", "ꓤ", "ꓕ", "ꓻ", "ꓵ", "꓾", "ˍ", "ꓒ"],
                           ["ꓯ", "ꓸꓼ", "ꓷ", "ꓞ", "ꓨ", "ꓺ", "ꓩ", "ꓘ", "ꓶ"],
-                          ["unshift","ꓹ", "ꓸ", "ꓛ", "ꓥ", "ꓭ", "-", "'","backspace"],
+                          ["unshift","ꓹ", "ꓸ", "ꓛ", "ꓥ", "ꓭ", "-", "=","backspace"],
                           ["123","keyboardchange", "space","?", "return"]
     ]
     keyboardLayout[MODE_CHANGE_ID.shift] = shiftPage
@@ -70,20 +78,29 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     keyboardLayout[MODE_CHANGE_ID.sym] = symPage
     
     // Padding for the buttons
-    var GAP_WIDTH: CGFloat = 0.012 * viewWidth // 1.2% of the whole width
-    if !isPortrait {
-        GAP_WIDTH = 0.008 * viewWidth
-    }
-    let GAP_HEIGHT: CGFloat = GAP_WIDTH
+    let GAP_RATIO: CGFloat = 0.015
+    var GAP_WIDTH: CGFloat = GAP_RATIO * viewWidth // 1.2% of the whole width
     
-    let MAX_NUM_GAP_HOR: CGFloat = 11
-    let MAX_NUM_GAP_VER: CGFloat = 5
+    if !isPortrait {
+        GAP_WIDTH = GAP_RATIO * 0.66 * viewWidth
+    }
+    
+    var GAP_HEIGHT: CGFloat = GAP_WIDTH * 1.75
+    
+    if !isPortrait {
+        GAP_HEIGHT = GAP_WIDTH
+    }
+    
+    let GAP_SIZE = CGSize(width: GAP_WIDTH, height: GAP_HEIGHT)
+    
+    let MAX_NUM_GAP_HOR: CGFloat = 11 // Max horizontal key is ten, so there are eleven gaps.
+    let MAX_NUM_GAP_VER: CGFloat = 5 // There are five rows. So, five gaps
     
     // Determine button width
     // So many magic numbers... :<<<
     let characterSize = CGSize(width: (viewWidth-(GAP_WIDTH * MAX_NUM_GAP_HOR))/10, height: (viewHeight - (GAP_HEIGHT * MAX_NUM_GAP_VER))/4)
-    let shiftDeleteSize = CGSize(width: (viewWidth - characterSize.width * 7 - GAP_WIDTH * 10)/2, height: characterSize.height )
-    let spacebarSize = CGSize(width: (characterSize.width * 6 + GAP_WIDTH * 5), height: characterSize.height)
+    let shiftDeleteSize = CGSize(width: (viewWidth - characterSize.width * 7 - GAP_WIDTH * 10)/2, height: characterSize.height ) // There are seven keys between shift and delete.
+    let spacebarSize = CGSize(width: (characterSize.width * 5 + GAP_WIDTH * 4), height: characterSize.height)
     
     // Icons
     let changeKeyboardIcon = "\u{0001F310}"
@@ -99,16 +116,17 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     keyboard.keys[MODE_CHANGE_ID.sym] = []
     
     // Reusable Keys
-    let charKey = Key(type: .character, keyValue: "", width: characterSize.width, height: characterSize.height, color: UIColor.darkGray, parentView: controller.view)
-    let backspaceKey = Key(type: .backspace, keyValue: backspaceIcon, width: shiftDeleteSize.width, height: shiftDeleteSize.height, color: UIColor.darkGray, parentView: controller.view)
-    let enterKey = Key(type: .enter, keyValue: enterIcon, width: characterSize.width, height: characterSize.height, color: UIColor.darkGray, parentView: controller.view)
-    let changeKeyboardKey = Key(type: .keyboardChange, keyValue: changeKeyboardIcon, width: characterSize.width, height: characterSize.height, color: UIColor.darkGray, parentView: controller.view)
+    let charKey = Key(type: .character, keyValue: "", width: characterSize.width, height: characterSize.height, parentView: controller.view, gapSize: GAP_SIZE)
+    let backspaceKey = Key(type: .backspace, keyValue: backspaceIcon, width: shiftDeleteSize.width, height: shiftDeleteSize.height, parentView: controller.view, gapSize: GAP_SIZE)
+    let enterKey = Key(type: .enter, keyValue: enterIcon, width: shiftDeleteSize.width, height: characterSize.height, parentView: controller.view, gapSize: GAP_SIZE)
+    let changeKeyboardKey = Key(type: .keyboardChange, keyValue: changeKeyboardIcon, width: characterSize.width, height: characterSize.height, parentView: controller.view, gapSize: GAP_SIZE)
     
     // Mode change buttons
-    let unshiftKey = Key(type: .modeChange, keyValue: specialKey.ABC, width: shiftDeleteSize.width, height: shiftDeleteSize.height, color: UIColor.darkGray, parentView: controller.view, tag: MODE_CHANGE_ID.unshift)
-    let shiftKey = Key(type: .modeChange, keyValue: shiftIcon, width: shiftDeleteSize.width, height: shiftDeleteSize.height, color: UIColor.darkGray, parentView: controller.view, tag: MODE_CHANGE_ID.shift)
-    let symKey = Key(type: .modeChange, keyValue: specialKey.sym, width: characterSize.width, height: characterSize.height, color: UIColor.darkGray, parentView: controller.view, tag: MODE_CHANGE_ID.sym)
-    let numKey = Key(type: .modeChange, keyValue: specialKey.num, width: characterSize.width, height: characterSize.height, color: UIColor.darkGray, parentView: controller.view, tag: MODE_CHANGE_ID.num)
+    let unshiftKey = Key(type: .modeChange, keyValue: specialKey.ABC, width: shiftDeleteSize.width, height: shiftDeleteSize.height, parentView: controller.view, tag: MODE_CHANGE_ID.unshift, gapSize: GAP_SIZE)
+    let shiftKey = Key(type: .modeChange, keyValue: shiftIcon, width: shiftDeleteSize.width, height: shiftDeleteSize.height, parentView: controller.view, tag: MODE_CHANGE_ID.shift, gapSize: GAP_SIZE)
+    let symKey = Key(type: .modeChange, keyValue: specialKey.sym, width: characterSize.width, height: characterSize.height, parentView: controller.view, tag: MODE_CHANGE_ID.sym, gapSize: GAP_SIZE)
+    let numKey = Key(type: .modeChange, keyValue: specialKey.num, width: shiftDeleteSize.width, height: characterSize.height, parentView: controller.view, tag: MODE_CHANGE_ID.num, gapSize: GAP_SIZE)
+
     
     //============================================//
     // UNSHIFT PAGE
@@ -123,7 +141,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     }
     // Add constraints for first row
     for (i,_) in firstRowKeys.enumerated() {
-        firstRowKeys[i].button.topAnchor.constraint(equalTo: controller.view.topAnchor, constant: GAP_HEIGHT).isActive = true
+        firstRowKeys[i].button.topAnchor.constraint(equalTo: topBar.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         // Top left
         if i == 0 {
             firstRowKeys[i].button.leftAnchor.constraint(equalTo: controller.view.leftAnchor, constant: GAP_WIDTH).isActive = true
@@ -191,9 +209,9 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     // Change keyboard button
     lastRowKeys.append(changeKeyboardKey.copy())
     // Spacebar button
-    lastRowKeys.append(charKey.copy(keyValue: " ", width: spacebarSize.width))
+    lastRowKeys.append(charKey.copy(type: .space, keyValue: " ", width: spacebarSize.width))
     // Period button
-    lastRowKeys.append(charKey.copy(keyValue: "꓿"))
+    lastRowKeys.append(charKey.copy(keyValue: "."))
     // Return button
     lastRowKeys.append(enterKey.copy())
     // Add constraints for Last row
@@ -228,7 +246,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     }
     // Add constraints for first row
     for (i,_) in firstRowKeys.enumerated() {
-        firstRowKeys[i].button.topAnchor.constraint(equalTo: controller.view.topAnchor, constant: GAP_HEIGHT).isActive = true
+        firstRowKeys[i].button.topAnchor.constraint(equalTo:  topBar.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Top left
         if i == 0 {
@@ -289,7 +307,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     // Change keyboard button
     lastRowKeys.append(changeKeyboardKey.copy())
     // Spacebar button
-    lastRowKeys.append(charKey.copy(keyValue: " ", width: spacebarSize.width))
+    lastRowKeys.append(charKey.copy(type: .space, keyValue: " ", width: spacebarSize.width))
     // Period button
     lastRowKeys.append(charKey.copy(keyValue: "?"))
     // Return button
@@ -324,7 +342,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     }
     // Add constraints for first row
     for (i,_) in firstRowKeys.enumerated() {
-        firstRowKeys[i].button.topAnchor.constraint(equalTo: controller.view.topAnchor, constant: GAP_HEIGHT).isActive = true
+        firstRowKeys[i].button.topAnchor.constraint(equalTo:  topBar.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Top left
         if i == 0 {
@@ -381,11 +399,11 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     // Last Row
     lastRowKeys = []
     // Change to number button
-    lastRowKeys.append(unshiftKey.copy(width:characterSize.width, height: characterSize.height))
+    lastRowKeys.append(unshiftKey.copy())
     // Change keyboard button
     lastRowKeys.append(changeKeyboardKey.copy())
     // Spacebar button
-    lastRowKeys.append(charKey.copy(keyValue: " ", width: spacebarSize.width))
+    lastRowKeys.append(charKey.copy(type: .space, keyValue: " ", width: spacebarSize.width))
     // Comma button
     lastRowKeys.append(charKey.copy(keyValue: ","))
     // Return button
@@ -421,7 +439,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     }
     // Add constraints for first row
     for (i,_) in firstRowKeys.enumerated() {
-        firstRowKeys[i].button.topAnchor.constraint(equalTo: controller.view.topAnchor, constant: GAP_HEIGHT).isActive = true
+        firstRowKeys[i].button.topAnchor.constraint(equalTo:  topBar.bottomAnchor, constant: GAP_HEIGHT).isActive = true
         
         // Top left
         if i == 0 {
@@ -478,11 +496,11 @@ func lisuKeyboardLayout(controller: UIInputViewController, viewWidth: CGFloat, v
     // Last Row
     lastRowKeys = []
     // Change to number button
-    lastRowKeys.append(unshiftKey.copy(width:characterSize.width, height: characterSize.height))
+    lastRowKeys.append(unshiftKey.copy())
     // Change keyboard button
     lastRowKeys.append(changeKeyboardKey.copy())
     // Spacebar button
-    lastRowKeys.append(charKey.copy(keyValue: " ", width: spacebarSize.width))
+    lastRowKeys.append(charKey.copy(type: .space, keyValue: " ", width: spacebarSize.width))
     // BulletPoint button
     lastRowKeys.append(charKey.copy(keyValue: "•"))
     // Return button

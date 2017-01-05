@@ -12,12 +12,10 @@ import UIKit
 class Key{
     enum KeyType {
         case character
-        case specialCharacter
         case shift
         case backspace
         case modeChange
         case keyboardChange
-        case period
         case space
         case num
         case sym
@@ -28,12 +26,14 @@ class Key{
     
     var type: KeyType
     var keyValue: String
-    var button = UIButton()
+    var button = keyButton(type: .custom)
     var width: CGFloat = 0.0
     var height: CGFloat = 0.0
-    var color = UIColor()
     var parentView = UIView()
     var tag: Int = 0 // Tag is 0 by default
+    
+    // This is a hack.
+    var GAP_SIZE = CGSize()
     
     init() {
         // Place holder
@@ -41,60 +41,58 @@ class Key{
         self.keyValue = ""
     }
     
-    init(type: KeyType, keyValue: String , width: CGFloat, height: CGFloat, color:UIColor, parentView: UIView, tag: Int? = nil) {
+    init(type: KeyType, keyValue: String , width: CGFloat, height: CGFloat, parentView: UIView, tag: Int? = nil, gapSize: CGSize? = nil) {
         self.type = type
         self.width = width
         self.height = height
-        self.color = color
         self.parentView = parentView
+        self.keyValue = keyValue
         
         if tag != nil {
             self.tag = tag!
         }
         
+        if gapSize != nil {
+            self.GAP_SIZE = gapSize!
+            self.button.setInset(gapX: (gapSize?.width)!, gapY: (gapSize?.height)!)
+        }
+        
+        // Determines the button type using MODE_CHANGE_ID
+        self.button.tag = self.tag
+        
+        // Buttons are hidden by default.
+        self.button.isHidden = true
+        
         // This assign a parent view to the button
         // This is need to set the constraints.
         parentView.addSubview(self.button)
         
-        self.button.backgroundColor = UIColor.init(white: 1, alpha: 1)
-        self.button.layer.borderColor = UIColor.darkGray.cgColor
-        self.button.isHidden = true
-        self.button.tag = self.tag
-        
-        // Button styling
-        self.keyValue = keyValue
         self.button.setTitle(self.keyValue, for: [])
-        self.button.setTitleColor(color, for: [])
         
+        // Style the button
+        self.button.setTitleColor(theme.keyColor, for: [])
         self.button.layer.cornerRadius = 5
+        self.button.backgroundColor = self.isSpecial ? theme.specialKeyBackgroundColor : theme.keyBackgroundColor
+        self.button.layer.borderColor = theme.keyBorderColor.cgColor
         
-        self.button.sizeToFit()
+        // Add shadow to button
+        self.button.layer.masksToBounds = false // Required for adding shadow.
+        self.button.layer.shadowColor = self.isSpecial ? theme.specialKeyShadowColor.cgColor : theme.keyShadowColor.cgColor
+        self.button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        self.button.layer.shadowOpacity = 1
+        self.button.layer.shadowRadius = 0
         
         // Button Constraint
+        self.button.sizeToFit()
         self.button.widthAnchor.constraint(equalToConstant: width).isActive = true
         self.button.heightAnchor.constraint(equalToConstant: height).isActive = true
-        
         self.button.translatesAutoresizingMaskIntoConstraints = false
         
     }
     
-    func copy(keyValue: String? = nil, width: CGFloat? = nil, height: CGFloat? = nil, color: UIColor? = nil) -> Key{
-        let copyObj = Key(type: self.type, keyValue: (keyValue != nil ? keyValue! : self.keyValue), width: (width != nil ? width! : self.width), height: (height != nil ? height! : self.height), color: (color != nil ? color! : self.color), parentView: self.parentView, tag: self.tag)
+    func copy(type: KeyType? = nil, keyValue: String? = nil, width: CGFloat? = nil, height: CGFloat? = nil) -> Key{
+        let copyObj = Key(type: (type != nil ? type! : self.type), keyValue: (keyValue != nil ? keyValue! : self.keyValue), width: (width != nil ? width! : self.width), height: (height != nil ? height! : self.height), parentView: self.parentView, tag: self.tag, gapSize: self.GAP_SIZE)
         return copyObj
-    }
-    
-    var isCharacter: Bool {
-        get {
-            switch self.type {
-            case
-            .character,
-            .specialCharacter,
-            .period:
-                return true
-            default:
-                return false
-            }
-        }
     }
     
     var isSpecial: Bool {

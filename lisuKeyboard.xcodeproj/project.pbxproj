@@ -14,12 +14,10 @@
 		FC471C711E0A4EDE00D80209 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC471C6F1E0A4EDE00D80209 /* LaunchScreen.storyboard */; };
 		FC471C7F1E0B08A500D80209 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471C7E1E0B08A500D80209 /* KeyboardViewController.swift */; };
 		FC471C831E0B08A500D80209 /* lisu keyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FC471C7C1E0B08A500D80209 /* lisu keyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		FC471CA31E0CB85800D80209 /* keyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471CA21E0CB85800D80209 /* keyBoard.swift */; };
 		FC471CA41E0CB85800D80209 /* keyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471CA21E0CB85800D80209 /* keyBoard.swift */; };
-		FC471CA61E0CB8F400D80209 /* lisuKeyboardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471CA51E0CB8F400D80209 /* lisuKeyboardLayout.swift */; };
 		FC471CA71E0CB8F400D80209 /* lisuKeyboardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471CA51E0CB8F400D80209 /* lisuKeyboardLayout.swift */; };
-		FC471CAC1E0CBB4800D80209 /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471CAB1E0CBB4800D80209 /* Key.swift */; };
 		FC471CAD1E0CBB4800D80209 /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471CAB1E0CBB4800D80209 /* Key.swift */; };
+		FC5225EC1E1CB4B50080807D /* keyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC5225EB1E1CB4B50080807D /* keyButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +58,7 @@
 		FC471CA21E0CB85800D80209 /* keyBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = keyBoard.swift; sourceTree = "<group>"; };
 		FC471CA51E0CB8F400D80209 /* lisuKeyboardLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = lisuKeyboardLayout.swift; sourceTree = "<group>"; };
 		FC471CAB1E0CBB4800D80209 /* Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
+		FC5225EB1E1CB4B50080807D /* keyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = keyButton.swift; sourceTree = "<group>"; };
 		FCD8C96A1E12EF3D0067F9C1 /* lisuKeyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = lisuKeyboard.entitlements; sourceTree = "<group>"; };
 		FCD8C96B1E12EF450067F9C1 /* lisu keyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "lisu keyboard.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -86,7 +85,6 @@
 			isa = PBXGroup;
 			children = (
 				FC471C651E0A4EDE00D80209 /* lisuKeyboard */,
-				FC471C881E0B365F00D80209 /* Model */,
 				FC471C7D1E0B08A500D80209 /* lisu keyboard */,
 				FC471C641E0A4EDE00D80209 /* Products */,
 			);
@@ -119,9 +117,12 @@
 			isa = PBXGroup;
 			children = (
 				FCD8C96B1E12EF450067F9C1 /* lisu keyboard.entitlements */,
+				FC5225EA1E1C99DC0080807D /* Global */,
+				FC471C881E0B365F00D80209 /* Model */,
 				FC471C7E1E0B08A500D80209 /* KeyboardViewController.swift */,
 				FC471C801E0B08A500D80209 /* Info.plist */,
 				FC471CA51E0CB8F400D80209 /* lisuKeyboardLayout.swift */,
+				FC5225EB1E1CB4B50080807D /* keyButton.swift */,
 			);
 			path = "lisu keyboard";
 			sourceTree = "<group>";
@@ -133,7 +134,14 @@
 				FC471CA21E0CB85800D80209 /* keyBoard.swift */,
 			);
 			name = Model;
-			path = lisuKeyboard;
+			path = ../lisuKeyboard;
+			sourceTree = "<group>";
+		};
+		FC5225EA1E1C99DC0080807D /* Global */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Global;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -252,10 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC471C691E0A4EDE00D80209 /* ViewController.swift in Sources */,
-				FC471CAC1E0CBB4800D80209 /* Key.swift in Sources */,
 				FC471C671E0A4EDE00D80209 /* AppDelegate.swift in Sources */,
-				FC471CA31E0CB85800D80209 /* keyBoard.swift in Sources */,
-				FC471CA61E0CB8F400D80209 /* lisuKeyboardLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +271,7 @@
 				FC471CAD1E0CBB4800D80209 /* Key.swift in Sources */,
 				FC471CA71E0CB8F400D80209 /* lisuKeyboardLayout.swift in Sources */,
 				FC471C7F1E0B08A500D80209 /* KeyboardViewController.swift in Sources */,
+				FC5225EC1E1CB4B50080807D /* keyButton.swift in Sources */,
 				FC471CA41E0CB85800D80209 /* keyBoard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
