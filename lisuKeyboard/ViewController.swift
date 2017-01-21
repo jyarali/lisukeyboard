@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+        self.textBox.text = "1234567890 1234567890 1234567890\n1234567890 1234567890 1234567890 1234567890 1234567890 1234567890"
         self.textBox.becomeFirstResponder()
     }
 

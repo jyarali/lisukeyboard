@@ -19,7 +19,8 @@ extension UILabel {
 class KeyboardViewController: UIInputViewController {
     
     @IBOutlet var nextKeyboardButton: UIButton!
-    var backspaceButtonTimer: Timer!
+    var backspaceButtonTimer: Timer? = nil
+    var thresholdTimer: Timer? = nil
     
     // Custom height for keyboard
     var heightConstraint:NSLayoutConstraint? = nil
@@ -50,6 +51,9 @@ class KeyboardViewController: UIInputViewController {
     
     // Set the top bar Height
     var topBarHeight : CGFloat = 0
+    
+    // Delete key
+    var deleteKey : UIButton? = nil
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -175,6 +179,10 @@ class KeyboardViewController: UIInputViewController {
             }
         }
         
+        // Extract out some keys.
+        self.deleteKey = self.view.viewWithTag(MODE_CHANGE_ID.del) as? UIButton
+        NSLog("Delete button \(self.deleteKey?.titleLabel?.text)")
+        
         // Add listeners to the keys
         self.addEventListeners()
     }
@@ -202,8 +210,12 @@ class KeyboardViewController: UIInputViewController {
                         key.button.addTarget(self, action: #selector(self.modeChangePressedHold(sender:)), for: .touchDown)
                     } else if key.type == .backspace {
                         // Deleting characters
+                        let deleteButtonLongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(KeyboardViewController.backspacePressedLong(gestureRecognizer:)))
+                        deleteButtonLongPressGestureRecognizer.minimumPressDuration = 0.6
+                        key.button.addGestureRecognizer(deleteButtonLongPressGestureRecognizer)
+                        NSLog("delete tag \(key.button.tag)")
                         key.button.addTarget(self, action: #selector(self.backspacePressedOnce(sender:)), for: [.touchUpInside, .touchUpOutside])
-                        key.button.addTarget(self, action: #selector(self.backspacePressedLong(sender:)), for: .touchDown)
+                        key.button.addTarget(self, action: #selector(self.backspacePressed(sender:)), for: .touchDown)
                     } else if key.type == .enter {
                         // Enter(Return) key
                         // Update the key value based on the returnType
@@ -247,7 +259,7 @@ class KeyboardViewController: UIInputViewController {
                 }
             }
         }
-        
+    
         // Show the next
         if newPage != 0 {
             for row in keyboard.keys[newPage]! {
@@ -264,14 +276,61 @@ class KeyboardViewController: UIInputViewController {
     // Trigger for delete on hold and press once.
     func backspacePressedOnce(sender: UIButton) {
         self.releasedSpecialKey(sender: sender)
-        self.backspaceButtonTimer.invalidate()
-        self.backspaceDelete()
+        self.backspaceButtonTimer?.invalidate()
+        //self.backspaceDelete()
     }
     
-    func backspacePressedLong(sender: UIButton) {
+    func backspacePressed(sender: UIButton) {
+        self.backspaceDelete()
         self.pressedSpecialKey(sender: sender)
-        self.backspaceButtonTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(KeyboardViewController.backspaceDelete), userInfo: nil, repeats: true)
     }
+    
+    func backspacePressedLong(gestureRecognizer: UILongPressGestureRecognizer) {
+        NSLog("Long press: ")
+        if gestureRecognizer.state == UIGestureRecognizerState.began {
+            NSLog("Started")
+            if backspaceButtonTimer == nil {
+                backspaceButtonTimer = Timer(timeInterval: 0.1, target: self, selector: #selector(KeyboardViewController.backspaceDelete), userInfo: nil, repeats: true)
+                backspaceButtonTimer!.tolerance = 0.01
+                RunLoop.main.add(backspaceButtonTimer!, forMode: RunLoopMode.defaultRunLoopMode)
+            }
+        }
+        else if gestureRecognizer.state == UIGestureRecognizerState.ended {
+            NSLog("Ended")
+            
+            // Release the key
+            self.releasedSpecialKey(sender: gestureRecognizer.view as! UIButton)
+            
+            backspaceButtonTimer?.invalidate()
+            backspaceButtonTimer = nil
+        }
+    }
+    
+//        switch gestureRecognizer.state {
+//        case .began:
+//            if backspaceButtonTimer == nil {
+//                backspaceButtonTimer = Timer(timeInterval: 0.05, target: self, selector: #selector(KeyboardViewController.backspaceDelete), userInfo: nil, repeats: true)
+//                backspaceButtonTimer!.tolerance = 0.01
+//                RunLoop.main.add(backspaceButtonTimer!, forMode: RunLoopMode.defaultRunLoopMode)
+//            }
+//        default:
+//            backspaceButtonTimer?.invalidate()
+//            backspaceButtonTimer = nil
+//        }
+//    }
+    
+//    func backspacePressedLong(sender: UIButton) {
+//        // Change the color.
+//        self.pressedSpecialKey(sender: sender)
+//        
+//        self.backspaceDelete()
+//        // Put a threshold timer.
+//        
+//        // Wait for 2 seconds.
+//        
+//        self.backspaceButtonTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(KeyboardViewController.backspaceDelete), userInfo: nil, repeats: true)
+//        self.backspaceButtonTimer?.tolerance = 0.01
+//    }
     
     func backspaceDelete() {
         self.textDocumentProxy.deleteBackward()

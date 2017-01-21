@@ -19,6 +19,7 @@ struct MODE_CHANGE_ID {
     static let shift = 2
     static let sym = 3
     static let num = 4
+    static let del = 5
 }
 
 // Colors

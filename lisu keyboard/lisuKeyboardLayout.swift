@@ -14,6 +14,14 @@ struct page {
 }
 
 func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, totalHeight: CGFloat, isPortrait: Bool, isIPad: Bool) -> Keyboard {
+       
+    struct MODE_CHANGE_ID {
+        static let unshift = 1
+        static let shift = 2
+        static let sym = 3
+        static let num = 4
+        static let del = 5
+    }
     
     let viewWidth = totalWidth
     let viewHeight = isIPad ? totalHeight : totalHeight / 1.15
@@ -21,6 +29,16 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     
     // NEED AN EXTRA BAR ON THE TOP FOR THE POPUP. ONLY FOR iPHONES
     let topBar = UIView()
+    
+    // Send feedback button to the topBar.
+    let feedbackButton = UILabel()
+    //feedbackButton.text = "Send Feedback"
+    feedbackButton.textColor = theme.keyColor
+    topBar.addSubview(feedbackButton)
+    feedbackButton.heightAnchor.constraint(equalToConstant: barHeight).isActive = true
+    feedbackButton.rightAnchor.constraint(equalTo: topBar.rightAnchor, constant: -5.0).isActive = true
+    feedbackButton.translatesAutoresizingMaskIntoConstraints = false
+    
     controller.view.addSubview(topBar)
     topBar.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
     topBar.heightAnchor.constraint(equalToConstant: barHeight).isActive = true
@@ -46,7 +64,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     var keyboardLayout : [Int: page] = [:]
     // Unshift
     var unshiftPage = page()
-    unshiftPage.keyboard = [["'", "ꓪ", "ꓰ", "ꓣ", "ꓔ", "ꓬ", "ꓴ", "ꓲ", "ꓳ", "ꓑ"],
+    unshiftPage.keyboard = [["Q", "ꓪ", "ꓰ", "ꓣ", "ꓔ", "ꓬ", "ꓴ", "ꓲ", "ꓳ", "ꓑ"],
                             ["ꓮ", "ꓢ", "ꓓ", "ꓝ", "ꓖ", "ꓧ", "ꓙ", "ꓗ", "ꓡ"],
                             ["shift","ꓜ", "ꓫ", "ꓚ", "ꓦ", "ꓐ", "ꓠ", "ꓟ","backspace"],
                             ["123","keyboardchange", "space",".", "return"]
@@ -54,16 +72,16 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     keyboardLayout[MODE_CHANGE_ID.unshift] = unshiftPage
     // Shift
     var shiftPage = page()
-    shiftPage.keyboard = [["\"", "ꓼ", "ꓱ", "ꓤ", "ꓕ", "ꓻ", "ꓵ", "꓾", "ˍ", "ꓒ"],
+    shiftPage.keyboard = [["\'", "ꓼ", "ꓱ", "ꓤ", "ꓕ", "ꓻ", "ꓵ", "꓾", "ˍ", "ꓒ"],
                           ["ꓯ", "ꓸꓼ", "ꓷ", "ꓞ", "ꓨ", "ꓺ", "ꓩ", "ꓘ", "ꓶ"],
-                          ["unshift","ꓹ", "ꓸ", "ꓛ", "ꓥ", "ꓭ", "-", "=","backspace"],
+                          ["unshift","ꓹ", ":", "ꓛ", "ꓥ", "ꓭ", "-", "=","backspace"],
                           ["123","keyboardchange", "space","?", "return"]
     ]
     keyboardLayout[MODE_CHANGE_ID.shift] = shiftPage
     // 123
     var numPage = page()
     numPage.keyboard = [["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-                        ["/", ":", ";", "(", ")", "$", "&", "@","!"],
+                        ["/", "\"", "ꓹꓼ", "(", ")", "$", "&", "@","!"],
                         ["sym","#", "+", "=", "-", "+", "<", ">","backspace"],
                         ["ABC","keyboardchange", "space",",", "return"]
     ]
@@ -117,7 +135,8 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     
     // Reusable Keys
     let charKey = Key(type: .character, keyValue: "", width: characterSize.width, height: characterSize.height, parentView: controller.view, gapSize: GAP_SIZE)
-    let backspaceKey = Key(type: .backspace, keyValue: backspaceIcon, width: shiftDeleteSize.width, height: shiftDeleteSize.height, parentView: controller.view, gapSize: GAP_SIZE)
+    let backspaceKey = Key(type: .backspace, keyValue: backspaceIcon, width: shiftDeleteSize.width, height: shiftDeleteSize.height, parentView: controller.view, tag: MODE_CHANGE_ID.del, gapSize: GAP_SIZE)
+    NSLog("layout backspacekey \(backspaceKey.button.tag)")
     let enterKey = Key(type: .enter, keyValue: enterIcon, width: shiftDeleteSize.width, height: characterSize.height, parentView: controller.view, gapSize: GAP_SIZE)
     let changeKeyboardKey = Key(type: .keyboardChange, keyValue: changeKeyboardIcon, width: characterSize.width, height: characterSize.height, parentView: controller.view, gapSize: GAP_SIZE)
     

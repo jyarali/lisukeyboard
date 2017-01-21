@@ -10,7 +10,6 @@
 		FC471C671E0A4EDE00D80209 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471C661E0A4EDE00D80209 /* AppDelegate.swift */; };
 		FC471C691E0A4EDE00D80209 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471C681E0A4EDE00D80209 /* ViewController.swift */; };
 		FC471C6C1E0A4EDE00D80209 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC471C6A1E0A4EDE00D80209 /* Main.storyboard */; };
-		FC471C6E1E0A4EDE00D80209 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC471C6D1E0A4EDE00D80209 /* Assets.xcassets */; };
 		FC471C711E0A4EDE00D80209 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC471C6F1E0A4EDE00D80209 /* LaunchScreen.storyboard */; };
 		FC471C7F1E0B08A500D80209 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471C7E1E0B08A500D80209 /* KeyboardViewController.swift */; };
 		FC471C831E0B08A500D80209 /* lisu keyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FC471C7C1E0B08A500D80209 /* lisu keyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -18,10 +17,11 @@
 		FC471CA71E0CB8F400D80209 /* lisuKeyboardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471CA51E0CB8F400D80209 /* lisuKeyboardLayout.swift */; };
 		FC471CAD1E0CBB4800D80209 /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471CAB1E0CBB4800D80209 /* Key.swift */; };
 		FC5225EC1E1CB4B50080807D /* keyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC5225EB1E1CB4B50080807D /* keyButton.swift */; };
+		FCED01771E2608DD00BFB395 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FCED01761E2608DD00BFB395 /* Media.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		FC471C811E0B08A500D80209 /* PBXContainerItemProxy */ = {
+		FCB2EC581E200F8500C0DF33 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FC471C5B1E0A4EDE00D80209 /* Project object */;
 			proxyType = 1;
@@ -49,7 +49,6 @@
 		FC471C661E0A4EDE00D80209 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FC471C681E0A4EDE00D80209 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		FC471C6B1E0A4EDE00D80209 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		FC471C6D1E0A4EDE00D80209 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FC471C701E0A4EDE00D80209 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FC471C721E0A4EDE00D80209 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FC471C7C1E0B08A500D80209 /* lisu keyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "lisu keyboard.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,6 +60,7 @@
 		FC5225EB1E1CB4B50080807D /* keyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = keyButton.swift; sourceTree = "<group>"; };
 		FCD8C96A1E12EF3D0067F9C1 /* lisuKeyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = lisuKeyboard.entitlements; sourceTree = "<group>"; };
 		FCD8C96B1E12EF450067F9C1 /* lisu keyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "lisu keyboard.entitlements"; sourceTree = "<group>"; };
+		FCED01761E2608DD00BFB395 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,9 +106,9 @@
 				FC471C661E0A4EDE00D80209 /* AppDelegate.swift */,
 				FC471C681E0A4EDE00D80209 /* ViewController.swift */,
 				FC471C6A1E0A4EDE00D80209 /* Main.storyboard */,
-				FC471C6D1E0A4EDE00D80209 /* Assets.xcassets */,
 				FC471C6F1E0A4EDE00D80209 /* LaunchScreen.storyboard */,
 				FC471C721E0A4EDE00D80209 /* Info.plist */,
+				FCED01761E2608DD00BFB395 /* Media.xcassets */,
 			);
 			path = lisuKeyboard;
 			sourceTree = "<group>";
@@ -159,7 +159,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				FC471C821E0B08A500D80209 /* PBXTargetDependency */,
+				FCB2EC591E200F8500C0DF33 /* PBXTargetDependency */,
 			);
 			name = lisuKeyboard;
 			productName = lisuKeyboard;
@@ -190,12 +190,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Amos Gwa";
 				TargetAttributes = {
 					FC471C621E0A4EDE00D80209 = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = 2T23QSAHDC;
+						DevelopmentTeam = AQDKL45UZ8;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -205,7 +205,7 @@
 					};
 					FC471C7B1E0B08A500D80209 = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = 2T23QSAHDC;
+						DevelopmentTeam = AQDKL45UZ8;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -240,8 +240,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC471C711E0A4EDE00D80209 /* LaunchScreen.storyboard in Resources */,
-				FC471C6E1E0A4EDE00D80209 /* Assets.xcassets in Resources */,
 				FC471C6C1E0A4EDE00D80209 /* Main.storyboard in Resources */,
+				FCED01771E2608DD00BFB395 /* Media.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,20 +269,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC471CAD1E0CBB4800D80209 /* Key.swift in Sources */,
-				FC471CA71E0CB8F400D80209 /* lisuKeyboardLayout.swift in Sources */,
-				FC471C7F1E0B08A500D80209 /* KeyboardViewController.swift in Sources */,
 				FC5225EC1E1CB4B50080807D /* keyButton.swift in Sources */,
+				FC471C7F1E0B08A500D80209 /* KeyboardViewController.swift in Sources */,
 				FC471CA41E0CB85800D80209 /* keyBoard.swift in Sources */,
+				FC471CA71E0CB8F400D80209 /* lisuKeyboardLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		FC471C821E0B08A500D80209 /* PBXTargetDependency */ = {
+		FCB2EC591E200F8500C0DF33 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = FC471C7B1E0B08A500D80209 /* lisu keyboard */;
-			targetProxy = FC471C811E0B08A500D80209 /* PBXContainerItemProxy */;
+			targetProxy = FCB2EC581E200F8500C0DF33 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -324,12 +324,15 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = AQDKL45UZ8;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -374,12 +377,15 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = AQDKL45UZ8;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -404,11 +410,16 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 2T23QSAHDC;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = AQDKL45UZ8;
 				INFOPLIST_FILE = lisuKeyboard/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.amosgwa.lisuKeyboard;
+				PRODUCT_BUNDLE_IDENTIFIER = com.amosgwa.keyboardlisu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 armv7s armv7";
@@ -420,11 +431,16 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 2T23QSAHDC;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = AQDKL45UZ8;
 				INFOPLIST_FILE = lisuKeyboard/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.amosgwa.lisuKeyboard;
+				PRODUCT_BUNDLE_IDENTIFIER = com.amosgwa.keyboardlisu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 armv7s armv7";
@@ -434,10 +450,12 @@
 		FC471C851E0B08A500D80209 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 2T23QSAHDC;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = AQDKL45UZ8;
 				INFOPLIST_FILE = "lisu keyboard/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.amosgwa.lisuKeyboard.keyboard;
+				PRODUCT_BUNDLE_IDENTIFIER = com.amosgwa.keyboardlisu.keyboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
@@ -449,10 +467,12 @@
 		FC471C861E0B08A500D80209 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 2T23QSAHDC;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = AQDKL45UZ8;
 				INFOPLIST_FILE = "lisu keyboard/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.amosgwa.lisuKeyboard.keyboard;
+				PRODUCT_BUNDLE_IDENTIFIER = com.amosgwa.keyboardlisu.keyboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
