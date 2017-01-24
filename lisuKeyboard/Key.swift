@@ -95,6 +95,28 @@ class Key{
         return copyObj
     }
     
+    func addSubscript(subScript: String){
+        // Add a subscript
+        let keyLabel = UILabel()
+        
+        keyLabel.setSizeFont(sizeFont: (self.button.titleLabel?.font.pointSize)! * 0.50)
+        
+        // Add the subscript key label to the button.
+        self.button.addSubview(keyLabel)
+        
+        // Add constraint to the subscript key label.
+        keyLabel.widthAnchor.constraint(equalToConstant: keyLabel.font.pointSize).isActive = true
+        keyLabel.heightAnchor.constraint(equalToConstant: keyLabel.font.pointSize).isActive = true
+        keyLabel.rightAnchor.constraint(equalTo: self.button.rightAnchor, constant: -self.width/12).isActive = true
+        keyLabel.topAnchor.constraint(equalTo: self.button.topAnchor, constant: self.width/12).isActive = true
+        
+        keyLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        keyLabel.textAlignment = NSTextAlignment.center
+        keyLabel.textColor = theme.subscriptKeyColor
+        keyLabel.text = (subScript)
+    }
+    
     var isSpecial: Bool {
         get {
             switch self.type {

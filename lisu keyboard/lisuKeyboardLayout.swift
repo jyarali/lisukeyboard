@@ -152,10 +152,15 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     //============================================//
     // First Row
     var firstRow = keyboardLayout[MODE_CHANGE_ID.unshift]?.keyboard[0]
+    var subscriptFirstRow = keyboardLayout[MODE_CHANGE_ID.shift]?.keyboard[0]
+    
     var firstRowKeys : [Key] = []
     // Create keys
-    for currChar in firstRow! {
-        let currKey = charKey.copy(keyValue: currChar)
+    for i in 0..<firstRow!.count {
+        let currKey = charKey.copy(keyValue: firstRow?[i])
+        currKey.button.isFirstRow = true
+        // Add preview subscript to the unshift page.
+        currKey.addSubscript(subScript: (subscriptFirstRow?[i])!)
         firstRowKeys.append(currKey)
     }
     // Add constraints for first row
@@ -171,10 +176,14 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     
     // Second Row
     var secondRow = keyboardLayout[MODE_CHANGE_ID.unshift]?.keyboard[1]
+    var subscriptSecondRow = keyboardLayout[MODE_CHANGE_ID.shift]?.keyboard[1]
+    
     var secondRowKeys : [Key] = []
     // Create keys
-    for currChar in secondRow! {
-        let currKey = charKey.copy(keyValue: currChar)
+    for i in 0..<secondRow!.count {
+        let currKey = charKey.copy(keyValue: secondRow?[i])
+        // Add preview subscript to the unshift page.
+        currKey.addSubscript(subScript: (subscriptSecondRow?[i])!)
         secondRowKeys.append(currKey)
     }
     // Add Padding before Second Row
@@ -195,18 +204,22 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     
     // Third Row
     var thirdRow = keyboardLayout[MODE_CHANGE_ID.unshift]?.keyboard[2]
+    var subscriptThirdRow = keyboardLayout[MODE_CHANGE_ID.shift]?.keyboard[2]
+    
     var thirdRowKeys : [Key] = []
     // Create keys
-    for currChar in thirdRow! {
+    for i in 0..<thirdRow!.count {
         var currKey = Key()
-        if currChar == specialKey.shift {
+        if thirdRow?[i] == specialKey.shift {
             // Shift
             currKey = shiftKey.copy()
-        } else if currChar == specialKey.backspace {
+        } else if thirdRow?[i] == specialKey.backspace {
             // Backspace
             currKey = backspaceKey.copy()
         }else {
-            currKey = charKey.copy(keyValue: currChar)
+            currKey = charKey.copy(keyValue: thirdRow?[i])
+            // Add preview subscript to the unshift page.
+            currKey.addSubscript(subScript: (subscriptThirdRow?[i])!)
         }
         thirdRowKeys.append(currKey)
     }
@@ -261,6 +274,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     // First Row
     for currChar in firstRow! {
         let currKey = charKey.copy(keyValue: currChar)
+        currKey.button.isFirstRow = true
         firstRowKeys.append(currKey)
     }
     // Add constraints for first row
@@ -357,6 +371,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
 //    // First Row
     for currChar in firstRow! {
         let currKey = charKey.copy(keyValue: currChar)
+        currKey.button.isFirstRow = true
         firstRowKeys.append(currKey)
     }
     // Add constraints for first row
@@ -454,6 +469,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     //    // First Row
     for currChar in firstRow! {
         let currKey = charKey.copy(keyValue: currChar)
+        currKey.button.isFirstRow = true
         firstRowKeys.append(currKey)
     }
     // Add constraints for first row

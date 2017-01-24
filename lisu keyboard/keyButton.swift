@@ -27,6 +27,8 @@ class keyButton: UIButton {
     var extraX : CGFloat = 0
     var extraY : CGFloat = 0
     
+    var isFirstRow : Bool = false
+    
     func setInset(gapX : CGFloat, gapY : CGFloat){
         self.extraX = gapX / 2
         self.extraY = gapY / 2

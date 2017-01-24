@@ -211,7 +211,7 @@ class KeyboardViewController: UIInputViewController {
                     } else if key.type == .backspace {
                         // Deleting characters
                         let deleteButtonLongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(KeyboardViewController.backspacePressedLong(gestureRecognizer:)))
-                        deleteButtonLongPressGestureRecognizer.minimumPressDuration = 0.6
+                        deleteButtonLongPressGestureRecognizer.minimumPressDuration = 0.5
                         key.button.addGestureRecognizer(deleteButtonLongPressGestureRecognizer)
                         NSLog("delete tag \(key.button.tag)")
                         key.button.addTarget(self, action: #selector(self.backspacePressedOnce(sender:)), for: [.touchUpInside, .touchUpOutside])
@@ -290,9 +290,8 @@ class KeyboardViewController: UIInputViewController {
         if gestureRecognizer.state == UIGestureRecognizerState.began {
             NSLog("Started")
             if backspaceButtonTimer == nil {
-                backspaceButtonTimer = Timer(timeInterval: 0.1, target: self, selector: #selector(KeyboardViewController.backspaceDelete), userInfo: nil, repeats: true)
+                backspaceButtonTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(KeyboardViewController.backspaceDelete), userInfo: nil, repeats: true)
                 backspaceButtonTimer!.tolerance = 0.01
-                RunLoop.main.add(backspaceButtonTimer!, forMode: RunLoopMode.defaultRunLoopMode)
             }
         }
         else if gestureRecognizer.state == UIGestureRecognizerState.ended {
@@ -347,7 +346,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     // Trigger for character key press.
-    func keyPressedHold(sender: UIButton){
+    func keyPressedHold(sender: keyButton){
         if isIPad {
             self.darkenKey(sender: sender)
         } else {
@@ -411,7 +410,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     // Show the pop up for characters.
-    func showKeyPopUp(sender: UIButton){
+    func showKeyPopUp(sender: keyButton){
         let customView = UIView()
         let keyLabel = UILabel()
         
@@ -448,7 +447,13 @@ class KeyboardViewController: UIInputViewController {
         self.view.addSubview(customView)
         
         customView.widthAnchor.constraint(equalToConstant: sender.frame.size.width).isActive = true
-        customView.heightAnchor.constraint(equalToConstant: sender.frame.size.height * 2).isActive = true
+        
+        if sender.isFirstRow {
+            customView.heightAnchor.constraint(equalToConstant: sender.frame.size.height * 2.0).isActive = true
+        } else {
+            customView.heightAnchor.constraint(equalToConstant: sender.frame.size.height * 2.5).isActive = true
+        }
+        
         customView.translatesAutoresizingMaskIntoConstraints = false
         
         customView.bottomAnchor.constraint(equalTo: sender.bottomAnchor).isActive = true
