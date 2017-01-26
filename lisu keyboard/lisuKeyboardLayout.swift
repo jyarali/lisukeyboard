@@ -160,7 +160,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
         let currKey = charKey.copy(keyValue: firstRow?[i])
         currKey.button.isFirstRow = true
         // Add preview subscript to the unshift page.
-        currKey.addSubscript(subScript: (subscriptFirstRow?[i])!)
+        currKey.addSubscript(subScript: (subscriptFirstRow?[i])!, isIPad: isIPad)
         firstRowKeys.append(currKey)
     }
     // Add constraints for first row
@@ -183,7 +183,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     for i in 0..<secondRow!.count {
         let currKey = charKey.copy(keyValue: secondRow?[i])
         // Add preview subscript to the unshift page.
-        currKey.addSubscript(subScript: (subscriptSecondRow?[i])!)
+        currKey.addSubscript(subScript: (subscriptSecondRow?[i])!, isIPad: isIPad)
         secondRowKeys.append(currKey)
     }
     // Add Padding before Second Row
@@ -219,7 +219,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
         }else {
             currKey = charKey.copy(keyValue: thirdRow?[i])
             // Add preview subscript to the unshift page.
-            currKey.addSubscript(subScript: (subscriptThirdRow?[i])!)
+            currKey.addSubscript(subScript: (subscriptThirdRow?[i])!, isIPad: isIPad)
         }
         thirdRowKeys.append(currKey)
     }

@@ -95,11 +95,16 @@ class Key{
         return copyObj
     }
     
-    func addSubscript(subScript: String){
+    func addSubscript(subScript: String, isIPad: Bool){
         // Add a subscript
         let keyLabel = UILabel()
         
-        keyLabel.setSizeFont(sizeFont: (self.button.titleLabel?.font.pointSize)! * 0.50)
+        if isIPad {
+            keyLabel.setSizeFont(sizeFont: (self.button.titleLabel?.font.pointSize)! * 0.70)
+        }
+        else {
+            keyLabel.setSizeFont(sizeFont: (self.button.titleLabel?.font.pointSize)! * 0.50)
+        }
         
         // Add the subscript key label to the button.
         self.button.addSubview(keyLabel)
