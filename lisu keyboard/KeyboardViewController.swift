@@ -485,5 +485,4 @@ class KeyboardViewController: UIInputViewController {
             self.nextKeyboardButton.setTitleColor(textColor, for: [])
         }
     }
-    
 }
