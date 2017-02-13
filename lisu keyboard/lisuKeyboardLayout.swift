@@ -32,11 +32,11 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     
     // Send feedback button to the topBar.
     let feedbackButton = UILabel()
-    //feedbackButton.text = "Send Feedback"
-    feedbackButton.textColor = theme.keyColor
+    feedbackButton.text = "lisuKeyboard"
+    feedbackButton.textColor = theme.keyboardTitleColor
     topBar.addSubview(feedbackButton)
     feedbackButton.heightAnchor.constraint(equalToConstant: barHeight).isActive = true
-    feedbackButton.rightAnchor.constraint(equalTo: topBar.rightAnchor, constant: -5.0).isActive = true
+    feedbackButton.leftAnchor.constraint(equalTo: topBar.leftAnchor, constant: 10.0).isActive = true
     feedbackButton.translatesAutoresizingMaskIntoConstraints = false
     
     controller.view.addSubview(topBar)
@@ -121,7 +121,7 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     let spacebarSize = CGSize(width: (characterSize.width * 5 + GAP_WIDTH * 4), height: characterSize.height)
     
     // Icons
-    let changeKeyboardIcon = "\u{0001F310}"
+    let changeKeyboardIcon = "globe.png"
     let enterIcon = "\u{000023CE}"
     let backspaceIcon = "\u{0000232B}"
     let shiftIcon = "\u{00021E7}"
@@ -136,9 +136,8 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     // Reusable Keys
     let charKey = Key(type: .character, keyValue: "", width: characterSize.width, height: characterSize.height, parentView: controller.view, gapSize: GAP_SIZE)
     let backspaceKey = Key(type: .backspace, keyValue: backspaceIcon, width: shiftDeleteSize.width, height: shiftDeleteSize.height, parentView: controller.view, tag: MODE_CHANGE_ID.del, gapSize: GAP_SIZE)
-    NSLog("layout backspacekey \(backspaceKey.button.tag)")
     let enterKey = Key(type: .enter, keyValue: enterIcon, width: shiftDeleteSize.width, height: characterSize.height, parentView: controller.view, gapSize: GAP_SIZE)
-    let changeKeyboardKey = Key(type: .keyboardChange, keyValue: changeKeyboardIcon, width: characterSize.width, height: characterSize.height, parentView: controller.view, gapSize: GAP_SIZE)
+    let changeKeyboardKey = Key(type: .keyboardChange, keyImage: changeKeyboardIcon, width: characterSize.width, height: characterSize.height, parentView: controller.view, gapSize: GAP_SIZE)
     
     // Mode change buttons
     let unshiftKey = Key(type: .modeChange, keyValue: specialKey.ABC, width: shiftDeleteSize.width, height: shiftDeleteSize.height, parentView: controller.view, tag: MODE_CHANGE_ID.unshift, gapSize: GAP_SIZE)

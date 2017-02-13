@@ -25,7 +25,8 @@ class Key{
     }
     
     var type: KeyType
-    var keyValue: String
+    var keyValue: String?
+    var keyImage: String?
     var button = keyButton(type: .custom)
     var width: CGFloat = 0.0
     var height: CGFloat = 0.0
@@ -41,17 +42,18 @@ class Key{
         self.keyValue = ""
     }
     
-    init(type: KeyType, keyValue: String , width: CGFloat, height: CGFloat, parentView: UIView, tag: Int? = nil, gapSize: CGSize? = nil) {
+    init(type: KeyType, keyValue: String? = nil, keyImage: String? = nil , width: CGFloat, height: CGFloat, parentView: UIView, tag: Int? = nil, gapSize: CGSize? = nil) {
         self.type = type
         self.width = width
         self.height = height
         self.parentView = parentView
-        self.keyValue = keyValue
         
         if tag != nil {
             self.tag = tag!
         }
         
+        // Hack to detect touches between the gaps.
+        // It makes the keyboard feel more responsive.
         if gapSize != nil {
             self.GAP_SIZE = gapSize!
             self.button.setInset(gapX: (gapSize?.width)!, gapY: (gapSize?.height)!)
@@ -66,8 +68,22 @@ class Key{
         // This assign a parent view to the button
         // This is need to set the constraints.
         parentView.addSubview(self.button)
-        
-        self.button.setTitle(self.keyValue, for: [])
+                
+        // Set value or image for the button
+        if keyImage != nil {
+            self.keyImage = keyImage!
+            // Change color of the image 
+            let tintedImage = UIImage(named : self.keyImage!)?.withRenderingMode(.alwaysTemplate)
+            
+            self.button.imageEdgeInsets = UIEdgeInsets(top: 0,left: 5,bottom: 0,right: 5)
+            
+            self.button.imageView?.contentMode = UIViewContentMode.scaleAspectFit
+            self.button.imageView?.tintColor = theme.keyColor
+            self.button.setImage(tintedImage, for: [])
+        } else if keyValue != nil {
+            self.keyValue = keyValue!
+            self.button.setTitle(self.keyValue!, for: [])
+        }
         
         // Style the button
         self.button.setTitleColor(theme.keyColor, for: [])
@@ -90,8 +106,8 @@ class Key{
         
     }
     
-    func copy(type: KeyType? = nil, keyValue: String? = nil, width: CGFloat? = nil, height: CGFloat? = nil) -> Key{
-        let copyObj = Key(type: (type != nil ? type! : self.type), keyValue: (keyValue != nil ? keyValue! : self.keyValue), width: (width != nil ? width! : self.width), height: (height != nil ? height! : self.height), parentView: self.parentView, tag: self.tag, gapSize: self.GAP_SIZE)
+    func copy(type: KeyType? = nil, keyValue: String? = nil, keyImage: String? = nil, width: CGFloat? = nil, height: CGFloat? = nil) -> Key{
+        let copyObj = Key(type: (type != nil ? type! : self.type), keyValue: (keyValue != nil ? keyValue! : self.keyValue), keyImage: (keyImage != nil ? keyImage! : self.keyImage), width: (width != nil ? width! : self.width), height: (height != nil ? height! : self.height), parentView: self.parentView, tag: self.tag, gapSize: self.GAP_SIZE)
         return copyObj
     }
     

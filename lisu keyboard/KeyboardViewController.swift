@@ -71,35 +71,30 @@ class KeyboardViewController: UIInputViewController {
         
         self.togglePageView(currPage: 0, newPage: self.currPage)
     }
-    
-    // Set keyboard custom height
+  
+    // Set the width and height of the keyboard based on the initial orientation of the device.
     func setCustomWidthHeight(){
         
         // I had to add top bar high at the end. Since the pop up key has to go beyond the keyboard. It's 15% increase.
         // Only applies to iPhones
         let topBarIncRatio : CGFloat = self.isIPad ? 1 : 1.15
-        
-        // Set the width and height based on the initial orientation of the device.
+      
         if isPortrait {
-            // Portrait
             portraitSize.width = UIScreen.main.bounds.width
             portraitSize.height = UIScreen.main.bounds.height * 0.32 * topBarIncRatio
             
             viewWidth = portraitSize.width
             viewHeight = portraitSize.height
-            
-            // Landscape
+          
             landscapeSize.height = UIScreen.main.bounds.width * 0.43 * topBarIncRatio
             landscapeSize.width = UIScreen.main.bounds.height
         } else {
-            // Landscape
             landscapeSize.width = UIScreen.main.bounds.width
             landscapeSize.height = UIScreen.main.bounds.height * 0.43 * topBarIncRatio
             
             viewWidth = landscapeSize.width
             viewHeight = landscapeSize.height
-            
-            // Portrait
+          
             portraitSize.height = UIScreen.main.bounds.width * 0.32 * topBarIncRatio
             portraitSize.width = UIScreen.main.bounds.height
         }
@@ -108,7 +103,7 @@ class KeyboardViewController: UIInputViewController {
     override func updateViewConstraints() {
         super.updateViewConstraints()
         // Change the view constraint to custom.
-        NSLog("Updating view constraint \(viewHeight)")
+
         if heightConstraint == nil {
             heightConstraint = NSLayoutConstraint(item: self.view,
                                                   attribute: .height,
@@ -181,7 +176,6 @@ class KeyboardViewController: UIInputViewController {
         
         // Extract out some keys.
         self.deleteKey = self.view.viewWithTag(MODE_CHANGE_ID.del) as? UIButton
-        NSLog("Delete button \(self.deleteKey?.titleLabel?.text)")
         
         // Add listeners to the keys
         self.addEventListeners()
@@ -213,7 +207,6 @@ class KeyboardViewController: UIInputViewController {
                         let deleteButtonLongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(KeyboardViewController.backspacePressedLong(gestureRecognizer:)))
                         deleteButtonLongPressGestureRecognizer.minimumPressDuration = 0.5
                         key.button.addGestureRecognizer(deleteButtonLongPressGestureRecognizer)
-                        NSLog("delete tag \(key.button.tag)")
                         key.button.addTarget(self, action: #selector(self.backspacePressedOnce(sender:)), for: [.touchUpInside, .touchUpOutside])
                         key.button.addTarget(self, action: #selector(self.backspacePressed(sender:)), for: .touchDown)
                     } else if key.type == .enter {
@@ -239,7 +232,6 @@ class KeyboardViewController: UIInputViewController {
     
     // Mode change is pressed.
     func modeChangePressedOnce(sender: UIButton){
-        NSLog("Changed to \(sender.tag)")
         self.releasedSpecialKey(sender: sender)
         togglePageView(currPage: currPage, newPage: sender.tag)
     }
@@ -250,7 +242,7 @@ class KeyboardViewController: UIInputViewController {
     
     // Attempt to optimize stage change
     // Toggle pages for the button
-    func togglePageView(currPage : Int, newPage : Int) {
+    func togglePageView(currPage: Int, newPage: Int) {
         // Hide the current
         if currPage != 0 {
             for row in keyboard.keys[currPage]! {
@@ -286,16 +278,13 @@ class KeyboardViewController: UIInputViewController {
     }
     
     func backspacePressedLong(gestureRecognizer: UILongPressGestureRecognizer) {
-        NSLog("Long press: ")
         if gestureRecognizer.state == UIGestureRecognizerState.began {
-            NSLog("Started")
             if backspaceButtonTimer == nil {
                 backspaceButtonTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(KeyboardViewController.backspaceDelete), userInfo: nil, repeats: true)
                 backspaceButtonTimer!.tolerance = 0.01
             }
         }
         else if gestureRecognizer.state == UIGestureRecognizerState.ended {
-            NSLog("Ended")
             
             // Release the key
             self.releasedSpecialKey(sender: gestureRecognizer.view as! UIButton)
@@ -304,32 +293,6 @@ class KeyboardViewController: UIInputViewController {
             backspaceButtonTimer = nil
         }
     }
-    
-//        switch gestureRecognizer.state {
-//        case .began:
-//            if backspaceButtonTimer == nil {
-//                backspaceButtonTimer = Timer(timeInterval: 0.05, target: self, selector: #selector(KeyboardViewController.backspaceDelete), userInfo: nil, repeats: true)
-//                backspaceButtonTimer!.tolerance = 0.01
-//                RunLoop.main.add(backspaceButtonTimer!, forMode: RunLoopMode.defaultRunLoopMode)
-//            }
-//        default:
-//            backspaceButtonTimer?.invalidate()
-//            backspaceButtonTimer = nil
-//        }
-//    }
-    
-//    func backspacePressedLong(sender: UIButton) {
-//        // Change the color.
-//        self.pressedSpecialKey(sender: sender)
-//        
-//        self.backspaceDelete()
-//        // Put a threshold timer.
-//        
-//        // Wait for 2 seconds.
-//        
-//        self.backspaceButtonTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(KeyboardViewController.backspaceDelete), userInfo: nil, repeats: true)
-//        self.backspaceButtonTimer?.tolerance = 0.01
-//    }
     
     func backspaceDelete() {
         self.textDocumentProxy.deleteBackward()
@@ -362,7 +325,6 @@ class KeyboardViewController: UIInputViewController {
             self.removePopUpKeys()
         }
         
-        NSLog("pressed \(sender.titleLabel?.text)")
         //self.showKeyPopUp(sender: sender)
         self.textDocumentProxy.insertText((sender.titleLabel?.text)!)
         
@@ -414,9 +376,7 @@ class KeyboardViewController: UIInputViewController {
         let customView = UIView()
         let keyLabel = UILabel()
         
-        NSLog("Font : \(keyLabel.font.fontName) \(keyLabel.font.pointSize)")
         keyLabel.setSizeFont(sizeFont: keyLabel.font.pointSize * 1.5)
-        NSLog("Font : \(keyLabel.font.fontName) \(keyLabel.font.pointSize)")
         
         // Add the preview key label to the popup view.
         customView.addSubview(keyLabel)

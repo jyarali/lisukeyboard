@@ -17,6 +17,7 @@
 		FC471CA71E0CB8F400D80209 /* lisuKeyboardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471CA51E0CB8F400D80209 /* lisuKeyboardLayout.swift */; };
 		FC471CAD1E0CBB4800D80209 /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC471CAB1E0CBB4800D80209 /* Key.swift */; };
 		FC5225EC1E1CB4B50080807D /* keyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC5225EB1E1CB4B50080807D /* keyButton.swift */; };
+		FC92D3641E52339E000656F6 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FCED01761E2608DD00BFB395 /* Media.xcassets */; };
 		FCED01771E2608DD00BFB395 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FCED01761E2608DD00BFB395 /* Media.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -199,7 +200,7 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -209,7 +210,7 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -249,6 +250,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC92D3641E52339E000656F6 /* Media.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,6 +412,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = lisuKeyboard/lisuKeyboard.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = AQDKL45UZ8;
@@ -431,6 +434,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = lisuKeyboard/lisuKeyboard.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = AQDKL45UZ8;
@@ -450,6 +454,7 @@
 		FC471C851E0B08A500D80209 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "lisu keyboard/lisu keyboard.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = AQDKL45UZ8;
@@ -467,6 +472,7 @@
 		FC471C861E0B08A500D80209 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "lisu keyboard/lisu keyboard.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = AQDKL45UZ8;

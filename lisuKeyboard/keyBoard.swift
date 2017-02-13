@@ -30,9 +30,10 @@ struct theme {
     static let keyBorderColor : UIColor = UIColor.darkGray
     static let keyShadowColor : UIColor = UIColor(red:0.80, green:0.80, blue:0.80, alpha:1.0)
     static let keyColor : UIColor = UIColor.darkGray
-    static let subscriptKeyColor : UIColor = UIColor.lightGray
+    static let subscriptKeyColor : UIColor = UIColor.gray
     static let specialKeyBackgroundColor : UIColor = UIColor(red:0.77, green:0.80, blue:0.81, alpha:1.0)
     static let specialKeyShadowColor : UIColor = UIColor(red:0.63, green:0.65, blue:0.66, alpha:0.6)
+    static let keyboardTitleColor : UIColor = UIColor.lightGray
 }
 
 class Keyboard {
