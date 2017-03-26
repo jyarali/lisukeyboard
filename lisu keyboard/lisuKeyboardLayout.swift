@@ -25,7 +25,13 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     
     let viewWidth = totalWidth
     let viewHeight = isIPad ? totalHeight : totalHeight / 1.15
-    let barHeight = isIPad ? 0 : totalHeight * 0.15
+    var barHeight = isIPad ? 0 : totalHeight * 0.15
+  
+    // Ipad and iOS lower than 10 doesn't have the top bar.
+    if #available(iOSApplicationExtension 9.0, *){
+    } else {
+      barHeight = 0.0
+    }
     
     // NEED AN EXTRA BAR ON THE TOP FOR THE POPUP. ONLY FOR iPHONES
     let topBar = UIView()
@@ -34,18 +40,21 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     let feedbackButton = UILabel()
     feedbackButton.text = "lisuKeyboard"
     feedbackButton.textColor = theme.keyboardTitleColor
+  
+    //topBar.translatesAutoresizingMaskIntoConstraints = false
     topBar.addSubview(feedbackButton)
+  
     feedbackButton.heightAnchor.constraint(equalToConstant: barHeight).isActive = true
     feedbackButton.leftAnchor.constraint(equalTo: topBar.leftAnchor, constant: 10.0).isActive = true
     feedbackButton.translatesAutoresizingMaskIntoConstraints = false
-    
+  
     controller.view.addSubview(topBar)
     topBar.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
     topBar.heightAnchor.constraint(equalToConstant: barHeight).isActive = true
     topBar.topAnchor.constraint(equalTo: controller.view.topAnchor).isActive = true
     topBar.translatesAutoresizingMaskIntoConstraints = false
     topBar.backgroundColor = theme.keyboardBackgroundColor
-    
+  
     // Just to save myself from typos
     struct specialKey {
         static let shift = "shift"

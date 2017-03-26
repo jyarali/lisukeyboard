@@ -47,7 +47,7 @@ class Key{
         self.width = width
         self.height = height
         self.parentView = parentView
-        
+      
         if tag != nil {
             self.tag = tag!
         }
@@ -73,9 +73,15 @@ class Key{
         if keyImage != nil {
             self.keyImage = keyImage!
             // Change color of the image 
-            let tintedImage = UIImage(named : self.keyImage!)?.withRenderingMode(.alwaysTemplate)
-            
-            self.button.imageEdgeInsets = UIEdgeInsets(top: 0,left: 5,bottom: 0,right: 5)
+            let tintedImage = UIImage(named : self.keyImage!)?.withRenderingMode(.alwaysTemplate)         
+          
+          let _isPortrait = self.width < self.height
+          
+          if _isPortrait {
+            self.button.imageEdgeInsets = UIEdgeInsets(top: 0,left: 0.2*self.width,bottom: 0,right: 0.2*self.width)
+          } else {
+            self.button.imageEdgeInsets = UIEdgeInsets(top: 0.2*self.height,left: 0,bottom: 0.2*self.height,right: 0)
+          }
             
             self.button.imageView?.contentMode = UIViewContentMode.scaleAspectFit
             self.button.imageView?.tintColor = theme.keyColor

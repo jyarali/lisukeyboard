@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Foundation
 
 // Extension for the UILabel to change font size.
 extension UILabel {
@@ -58,22 +59,19 @@ class KeyboardViewController: UIInputViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Set keyboard's background
+        // Apply background style
         self.view.backgroundColor = theme.keyboardBackgroundColor
+      
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.setCustomWidthHeight()
-        
-        self.renderKeys()
-        
-        self.togglePageView(currPage: 0, newPage: self.currPage)
+      
+        self.calc_customWidthHeight()
     }
   
-    // Set the width and height of the keyboard based on the initial orientation of the device.
-    func setCustomWidthHeight(){
+    // Calculate the width and height of the keyboard based on the initial orientation of the device.
+    func calc_customWidthHeight(){
         
         // I had to add top bar high at the end. Since the pop up key has to go beyond the keyboard. It's 15% increase.
         // Only applies to iPhones
@@ -81,52 +79,65 @@ class KeyboardViewController: UIInputViewController {
       
         if isPortrait {
             portraitSize.width = UIScreen.main.bounds.width
-            portraitSize.height = UIScreen.main.bounds.height * 0.32 * topBarIncRatio
+            portraitSize.height = round(UIScreen.main.bounds.height * 0.32 * topBarIncRatio)
             
             viewWidth = portraitSize.width
             viewHeight = portraitSize.height
           
-            landscapeSize.height = UIScreen.main.bounds.width * 0.43 * topBarIncRatio
+            landscapeSize.height = round(UIScreen.main.bounds.width * 0.43 * topBarIncRatio)
             landscapeSize.width = UIScreen.main.bounds.height
         } else {
             landscapeSize.width = UIScreen.main.bounds.width
-            landscapeSize.height = UIScreen.main.bounds.height * 0.43 * topBarIncRatio
+            landscapeSize.height = round(UIScreen.main.bounds.height * 0.43 * topBarIncRatio)
             
             viewWidth = landscapeSize.width
             viewHeight = landscapeSize.height
           
-            portraitSize.height = UIScreen.main.bounds.width * 0.32 * topBarIncRatio
+            portraitSize.height = round(UIScreen.main.bounds.width * 0.32 * topBarIncRatio)
             portraitSize.width = UIScreen.main.bounds.height
         }
     }
-    
+  
+    // Set the width and height of the keyboard
+    func set_customWidthHeight() {
+      if heightConstraint == nil {
+        heightConstraint = NSLayoutConstraint(item: self.view,
+                                              attribute: .height,
+                                              relatedBy: .equal,
+                                              toItem: nil,
+                                              attribute: .notAnAttribute,
+                                              multiplier: 1,
+                                              constant: viewHeight)
+        heightConstraint?.priority = UILayoutPriority(UILayoutPriorityRequired)
+        self.view.addConstraint(heightConstraint!)
+      } else {
+        heightConstraint?.constant = viewHeight
+      }
+    }
+  
+    override func viewDidAppear(_ animated: Bool) {
+      super.viewDidAppear(animated)
+      
+      self.calc_customWidthHeight()
+      
+      self.renderKeys()
+      
+      self.togglePageView(currPage: 0, newPage: self.currPage)
+    }
+  
     override func updateViewConstraints() {
         super.updateViewConstraints()
         // Change the view constraint to custom.
-
-        if heightConstraint == nil {
-            heightConstraint = NSLayoutConstraint(item: self.view,
-                                                  attribute: .height,
-                                                  relatedBy: .equal,
-                                                  toItem: nil,
-                                                  attribute: .notAnAttribute,
-                                                  multiplier: 1,
-                                                  constant: viewHeight)
-            heightConstraint?.priority = UILayoutPriority(UILayoutPriorityRequired)
-            self.view.addConstraint(heightConstraint!)
-        } else {
-            heightConstraint?.constant = viewHeight
-        }
+        self.set_customWidthHeight()
     }
-    
+  
     // When changing orientation, change the keyboard height and width
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
         // Check if the orientation has definitely changed from landscape to portrait or viceversa.
         // This is to prevent flipping landscapes. The device will rotate with the same width.
-        // viewWidth != size.width
-        
+      
         if size.width != viewWidth {
             
             isPortrait = !isPortrait
@@ -147,6 +158,7 @@ class KeyboardViewController: UIInputViewController {
                 //Done animation
             })
         }
+      
     }
     
     // Remove key from the sub view.
@@ -197,7 +209,12 @@ class KeyboardViewController: UIInputViewController {
                     } else if key.type == .keyboardChange {
                         // Changing keyboard
                         self.nextKeyboardButton = key.button
+                      if #available(iOSApplicationExtension 10.0, *) {
                         self.nextKeyboardButton.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
+                      } else {
+                        // Fallback on earlier versions
+                        self.nextKeyboardButton.addTarget(self, action: #selector(advanceToNextInputMode), for: .allTouchEvents)
+                      }
                     } else if key.type == .modeChange {
                         // Chaning modes
                         key.button.addTarget(self, action: #selector(self.modeChangePressedOnce(sender:)), for: [.touchUpInside, .touchUpOutside])
