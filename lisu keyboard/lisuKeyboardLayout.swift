@@ -73,17 +73,17 @@ func lisuKeyboardLayout(controller: UIInputViewController, totalWidth: CGFloat, 
     var keyboardLayout : [Int: page] = [:]
     // Unshift
     var unshiftPage = page()
-    unshiftPage.keyboard = [["Q", "ꓪ", "ꓰ", "ꓣ", "ꓔ", "ꓬ", "ꓴ", "ꓲ", "ꓳ", "ꓑ"],
-                            ["ꓮ", "ꓢ", "ꓓ", "ꓝ", "ꓖ", "ꓧ", "ꓙ", "ꓗ", "ꓡ"],
-                            ["shift","ꓜ", "ꓫ", "ꓚ", "ꓦ", "ꓐ", "ꓠ", "ꓟ","backspace"],
+    unshiftPage.keyboard = [[ "ۇ", "ق", "ف", "غ", "ع", "ه", "خ", "ح", "ج", "چ",],
+                            ["ش", "س", "ی", "ب", "ل", "ا", "ت", "ن", "م"],
+                            ["shift","ؤ", "ۆ", "ز", "ر", "چ", "پ", "ئ","backspace"],
                             ["123","keyboardchange", "space",".", "return"]
     ]
     keyboardLayout[MODE_CHANGE_ID.unshift] = unshiftPage
     // Shift
     var shiftPage = page()
-    shiftPage.keyboard = [["\'", "ꓼ", "ꓱ", "ꓤ", "ꓕ", "ꓻ", "ꓵ", "꓾", "ˍ", "ꓒ"],
-                          ["ꓯ", "ꓸꓼ", "ꓷ", "ꓞ", "ꓨ", "ꓺ", "ꓩ", "ꓘ", "ꓶ"],
-                          ["unshift","ꓹ", ":", "ꓛ", "ꓥ", "ꓭ", "-", "=","backspace"],
+    shiftPage.keyboard = [["ص", "ض", "ظ", "ط", "ꓕ", "ꓻ", "ꓵ", "꓾", "ج", "\'"],
+                          ["ّ", "ُ", "ِ", "َ", "آ", "أ", "ꓩ", "ک", "گ"],
+                          ["unshift","ꓹ", ":", "ذ", "د", "ꓭ", "-", "=","backspace"],
                           ["123","keyboardchange", "space","?", "return"]
     ]
     keyboardLayout[MODE_CHANGE_ID.shift] = shiftPage
